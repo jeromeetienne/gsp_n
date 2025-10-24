@@ -3,7 +3,7 @@
 
 ## User target
 - In the scientific visualization domain, the GSP protocol API can be viewed as a low-level 3D graphics API, similar to a "matplotlib backend"
-    - It is not designed to be used directly by scientists who want to visualize their data
+    - It is not designed to be used directly by scientists who want to visualize their data. They use high-level libraries (e.g., matplotlib, plotly, etc)
     - It is designed for developers who want to implement visualization tools (and these visualization tools will, in turn, be used by scientists)
 - So the API is designed 
     - to be unambiguous (hence the use of typing and pyi files)

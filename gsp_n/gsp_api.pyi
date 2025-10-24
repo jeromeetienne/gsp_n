@@ -25,17 +25,15 @@ class Constants:
     blue = numpy.uint32(0x0000FFFF)
 
 class Buffer:
-    """typed array with single dimension"""
+    """typed array with single dimension
+    - it is immutable in count and type, but mutable in content
+    """
 
     def __init__(self, count: int, buffer_type: BufferType) -> None: ...
     def get_data(self, offset: int, length: int) -> bytes: ...
     def set_data(self, data: bytes, offset: int) -> None: ...
     def get_count(self) -> int: ...
     def get_type(self) -> BufferType: ...
-
-    # __getitem__ and __setitem__ for array access
-    def __getitem__(self, key: int) -> BufferType: ...
-    def __setitem__(self, key: int, value: Any) -> None: ...
 
     # Fill method overloads
     @overload
@@ -69,20 +67,12 @@ class DataSource:
 # Transform
 # =============================================================================
 
-
 class TransformLink:
     """Base class for a link in a Transform chain."""
-
-    pass
+    ...
 
 class Transform:
     """Chain of transformations to apply to data."""
-
-    userData: dict[str, Any]
-    """Dictionary for user-defined data.
-    - TransformMeasure will store the unit here.
-    - TransformAccessor will store which field is accessed here.
-    """
 
     def to_buffer(self) -> Buffer: ...
     """Compute the transform and return a Buffer with the result."""
@@ -92,6 +82,7 @@ class Transform:
 
 # =============================================================================
 # Predefined Transform links
+# - all those those classes are instance of TransformLink, they could/should be in user-space
 # =============================================================================
 
 class TransformOperator(TransformLink):
@@ -112,7 +103,7 @@ class TransformDataSource(TransformLink):
 class TransformMeasure(TransformLink):
     """A transformation link that applies unit conversion."""
 
-    unit: Literal['dot', 'pixel', 'inche', 'centimeter']
+    unit: Literal['dot', 'pixel', 'inch', 'centimeter']
     """Unit to convert to, e.g., 'meter', 'pixel', etc."""
 
 class TransformAccessor(TransformLink):
@@ -201,12 +192,12 @@ class Pixels(Visual):
 class Images(Visual):
     def __init__(
         self,
-        positions: TransBuf,
-        sizes: TransBuf,
-        axis: TransBuf,
-        angles: TransBuf,
+        positions: list[TransBuf],
+        sizes: list[TransBuf],
+        axis: list[TransBuf],
+        angles: list[TransBuf],
         textures: list[Texture],
-        groups: TransBuf,
+        groups: list[TransBuf],
     ) -> None: ...
 
 # =============================================================================
