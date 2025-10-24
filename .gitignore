@@ -1,2 +1,4 @@
 # ignore virtual environment
 .venv/
+# ignore compiled python files
+__pycache__/
