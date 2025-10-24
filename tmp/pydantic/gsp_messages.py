@@ -75,7 +75,7 @@ class TransformLink(GspMessage):
     ...
 
 @dataclass
-class TransformLinkOperator(GspMessage):
+class TransformLinkOperator(TransformLink):
     operator: Literal['add', 'sub', 'mul', 'div']
     operand: float | int
 
