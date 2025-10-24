@@ -1,5 +1,5 @@
-import gsp_n as gsp
-from gsp_n import Constants, BufferType, Buffer, Texture2D, Images, Camera, MatplotlibRenderer, Canvas, Viewport, Mat4, DataSource
+from src.gsp_n import Constants, BufferType, Buffer, Texture2D, Images, Camera, MatplotlibRenderer, Canvas, Viewport, Mat4, DataSource
+import src.gsp_n as gsp
 import numpy as np
 
 

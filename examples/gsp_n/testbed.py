@@ -1,6 +1,9 @@
-import gsp_n as gsp
-from gsp_n import Constants, BufferType, Buffer, Texture2D, Images, Pixels, Camera, MatplotlibRenderer, Canvas, Viewport, Mat4, DataSource
+import src.gsp_n as gsp
+from src.gsp_n import Constants, BufferType, Buffer, Texture2D, Images, Pixels, Camera, MatplotlibRenderer, Canvas, Viewport, Mat4, DataSource
 import numpy as np
+
+import tmp.protobuf.output.sample
+
 
 
 def main():
@@ -21,7 +24,8 @@ def main():
     # all pixels red - Create buffer and fill it with a constant
     colors_buffer = Buffer(point_count, BufferType.color).fill(gsp.Constants.red)  # Red color
     # one group for all points - create buffer and set value with immediate array assignment
-    groups_buffer = Buffer.from_numpy(np.array([1]).astype(np.uint32))
+    groups_buffer = Buffer(1, BufferType.uint32)
+    groups_buffer[0] = 1
     # Create pixels visual
     pixels = Pixels(positions_buffer, colors_buffer, groups_buffer)
     viewport.add(pixels)

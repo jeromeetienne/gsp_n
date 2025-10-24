@@ -82,7 +82,7 @@ class Transform:
 
 # =============================================================================
 # Predefined Transform links
-# - all those those classes are instance of TransformLink, they could/should be in user-space
+# - all those those classes are instance of TransformLink, they could/should be in user-space gsp-extra
 # =============================================================================
 
 class TransformOperator(TransformLink):
@@ -91,6 +91,8 @@ class TransformOperator(TransformLink):
     operator: Literal['add', 'sub', 'mul', 'div']
     """Operator to apply. One of 'add', 'sub', 'mul', 'div'."""
 
+    # FIXME: this operand may be a Buffer or a Transform in the future
+    # FIXME: provide a .copy()
     operand: Union[float, int]
     """Operand for the operator."""
 
@@ -192,12 +194,12 @@ class Pixels(Visual):
 class Images(Visual):
     def __init__(
         self,
-        positions: list[TransBuf],
-        sizes: list[TransBuf],
-        axis: list[TransBuf],
-        angles: list[TransBuf],
-        textures: list[Texture],
-        groups: list[TransBuf],
+        positions: TransBuf,
+        sizes: TransBuf,
+        axes: TransBuf,
+        angles: TransBuf,
+        textures: list[Texture2D],
+        groups: TransBuf,
     ) -> None: ...
 
 # =============================================================================
