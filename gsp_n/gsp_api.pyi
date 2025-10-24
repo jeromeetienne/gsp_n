@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Union, overload, Any
+from typing import Literal, Union, overload, Any
 
 import numpy
 
@@ -68,10 +68,74 @@ class DataSource:
 # =============================================================================
 # Transform
 # =============================================================================
+
+
+class TransformLink:
+    """Base class for a link in a Transform chain."""
+
+    pass
+
 class Transform:
     """Chain of transformations to apply to data."""
 
-    ...
+    userData: dict[str, Any]
+    """Dictionary for user-defined data.
+    - TransformMeasure will store the unit here.
+    - TransformAccessor will store which field is accessed here.
+    """
+
+    def to_buffer(self) -> Buffer: ...
+    """Compute the transform and return a Buffer with the result."""
+
+    links: list[TransformLink]
+    """Ordered list of links defining the transform."""
+
+# =============================================================================
+# Predefined Transform links
+# =============================================================================
+
+class TransformOperator(TransformLink):
+    """A transformation link that applies an operator with an operand."""
+
+    operator: Literal['add', 'sub', 'mul', 'div']
+    """Operator to apply. One of 'add', 'sub', 'mul', 'div'."""
+
+    operand: Union[float, int]
+    """Operand for the operator."""
+
+class TransformDataSource(TransformLink):
+    """A transformation link that loads data from a DataSource."""
+
+    data_source: DataSource
+    """Data source to load data from."""
+
+class TransformMeasure(TransformLink):
+    """A transformation link that applies unit conversion."""
+
+    unit: Literal['dot', 'pixel', 'inche', 'centimeter']
+    """Unit to convert to, e.g., 'meter', 'pixel', etc."""
+
+class TransformAccessor(TransformLink):
+    """A transformation link that accesses a specific field from structured data."""
+
+    field_name: Literal['x', 'y', 'z', 'w', 'r', 'g', 'b', 'a']
+    """Name of the field to access in the structured data."""
+
+class TransformSetData(TransformLink):
+    """A transformation link that copy data from a Buffer."""
+
+    buffer: Buffer
+    """Buffer to use in the transformation."""
+    offset: int
+    """Offset in the buffer to start reading data from."""
+    count: int
+    """Number of elements to read from the buffer."""
+
+class TransformColorMap(TransformLink):
+    """A transformation link that project scalar data to color using a colormap. Assume the scalar is normalized between 0 and 1."""
+
+    colormap_name: Literal['viridis', 'plasma', 'inferno', 'magma', 'cividis']
+    """Name of the colormap to use. Based on matplotlib colormaps."""
 
 # =============================================================================
 #
