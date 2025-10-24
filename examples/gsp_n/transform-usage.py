@@ -19,7 +19,7 @@ def main():
     # Random positions - Create buffer from numpy array
     positions_buffer = Buffer.from_numpy(np.random.rand(point_count, 3).astype(np.float32))
     # all pixels red - Create buffer and fill it with a constant
-    colors_buffer = Buffer(point_count, BufferType.color).fill(gsp.Constants.red)  # Red color
+    colors_buffer = Buffer(point_count, BufferType.color) # Red color
     # one group for all points - create buffer and set value with immediate array assignment
     groups_buffer = Buffer.from_numpy(np.array([1]).astype(np.uint32))
     # Create pixels visual

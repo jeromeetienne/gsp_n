@@ -19,7 +19,8 @@ class BufferType(Enum):
     vec4 = 7
 
     @staticmethod
-    def get_itemsize(buffer_type: "BufferType") -> int:
+    def get_item_size(buffer_type: "BufferType") -> int:
+        """Return the size in bytes of a single item of the given BufferType."""
         if buffer_type == BufferType.float32:
             return 4
         elif buffer_type == BufferType.uint32:
@@ -44,17 +45,17 @@ class BufferType(Enum):
     @staticmethod
     def to_numpy_dtype(buffer_type: "BufferType") -> np.dtype:
         if buffer_type == BufferType.float32:
-            return np.float32
+            return np.dtype(np.float32)
         elif buffer_type == BufferType.uint32 or buffer_type == BufferType.color:
-            return np.uint32
+            return np.dtype(np.uint32)
         elif buffer_type == BufferType.uint8:
-            return np.uint8
+            return np.dtype(np.uint8)
         elif buffer_type == BufferType.int32:
-            return np.int32
+            return np.dtype(np.int32)
         elif buffer_type == BufferType.int8:
-            return np.int8
+            return np.dtype(np.int8)
         elif buffer_type in (BufferType.vec2, BufferType.vec3, BufferType.vec4):
-            return np.float32
+            return np.dtype(np.float32)
         else:
             raise ValueError(f"Unknown BufferType: {buffer_type}")
     

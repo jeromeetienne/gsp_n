@@ -13,17 +13,17 @@ class Buffer():
     """
 
     def __init__(self, count: int, buffer_type: BufferType) -> None:
-        item_size = BufferType.get_itemsize(buffer_type)
+        item_size = BufferType.get_item_size(buffer_type)
         self._count = count
         self._type = buffer_type
-        self._bytearray = bytearray(count * item_size)
+        self._bytearray = bytes(count * item_size)
 
     def __repr__(self) -> str:
         return f"Buffer(count={self._count}, type={self._type})"
 
     def get_data(self, offset: int, count: int) -> "Buffer":
         """Return a buffer of count elements starting from offset."""
-        item_size = BufferType.get_itemsize(self._type)
+        item_size = BufferType.get_item_size(self._type)
         start = offset * item_size
         end = start + count * item_size
 
@@ -31,16 +31,16 @@ class Buffer():
         new_buffer.set_data(self._bytearray[start:end], 0, count)
         return new_buffer
 
-    def set_data(self, _bytearray: bytearray, offset: int, count: int) -> None:
+    def set_data(self, _bytes: bytes, offset: int, count: int) -> None:
         """Copy count elements starting from offset in the source bytearray."""
-        item_size = BufferType.get_itemsize(self._type)
+        item_size = BufferType.get_item_size(self._type)
 
         # sanity check
         assert offset + count <= self._count, f"Invalid offset {offset} and count {count} for buffer of size {self._count}"
 
         start = offset * item_size
         end = start + count * item_size
-        self._bytearray[start:end] = _bytearray[0:count * item_size]
+        self._bytearray = self._bytearray[:start] + _bytes[0:count * item_size] + self._bytearray[end:]
 
     def get_count(self) -> int:
         """Return the number of elements in the buffer."""
@@ -66,12 +66,12 @@ class Buffer():
         return bytearray(self._bytearray)
 
     @staticmethod
-    def from_bytes(data: bytearray, buffer_type: BufferType) -> "Buffer":
-        item_size = BufferType.get_itemsize(buffer_type)
+    def from_bytes(_bytearray: bytearray, buffer_type: BufferType) -> "Buffer":
+        item_size = BufferType.get_item_size(buffer_type)
         # sanity check
-        assert len(data) % item_size == 0, f"data size {len(data)} is not aligned with buffer type item size {item_size}"
+        assert len(_bytearray) % item_size == 0, f"data size {len(_bytearray)} is not aligned with buffer type item size {item_size}"
 
         # create buffer
-        buffer = Buffer(len(data) // item_size, buffer_type)
-        buffer.set_data(data, 0, buffer.get_count())
+        buffer = Buffer(len(_bytearray) // item_size, buffer_type)
+        buffer.set_data(bytes(_bytearray), 0, buffer.get_count())
         return buffer
