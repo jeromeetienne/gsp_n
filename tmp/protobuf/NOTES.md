@@ -1,8 +1,6 @@
 - no doc associated to the fields
   - similar to __doc__ for classes
-- no string typing in the generated python code
-  - https://pypi.org/project/types-protobuf/ suppose to fix the problem
-  - cant make it work for now 
+- strong typing in the generated python code
   - WORK with --pyi_out option of protoc
 - LOTS of globals in the generated python code
   - hard to track where things come from
@@ -11,3 +9,4 @@
 - requirement of a compiler tool (protoc)
   - need to integrate that in the build system
   - need to distribute the protoc binary with the project
+- protobufs is 25 years old, and it shows

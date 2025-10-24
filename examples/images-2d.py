@@ -1,4 +1,4 @@
-import gsp_api as gsp
+import gsp_n as gsp
 import numpy as np
 
 

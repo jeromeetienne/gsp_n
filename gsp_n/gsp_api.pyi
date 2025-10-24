@@ -52,6 +52,7 @@ class Mat4x4:
 
 class DataSource:
     def __init__(self, uri: str) -> None: ...
+    """Data source from which data can be loaded, e.g., image file path. .npy numpy files"""
     def to_buffer(self, buffer_type: BufferType = BufferType.uint8) -> Buffer: ...
 
 # =============================================================================
