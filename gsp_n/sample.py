@@ -21,8 +21,7 @@ def main():
     colors_buffer = gsp.Buffer(point_count, gsp.BufferType.color).fill(gsp.Constants.red)  # Red color
     # one group for all points - create buffer and set value with immediate assignment
     groups_buffer = gsp.Buffer(1, gsp.BufferType.uint32)
-    # TODO set the [0] element to 1
-    # groups_buffer[0] = gsp.BufferType.uint32(1)  # one group
+    groups_buffer[0] = 1
 
     pixels = gsp.Pixels(positions_buffer, colors_buffer, groups_buffer)
     viewport.add(pixels)
