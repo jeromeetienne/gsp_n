@@ -1,13 +1,15 @@
 [project]
-name = "gsp_n"
+name = "gsp-n"
 version = "0.1.0"
 description = ""
 authors = [
     {name = "Jerome Etienne",email = "jerome.etienne@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.13"
 dependencies = [
+    "numpy (>=2.3.4,<3.0.0)",
+    "protobuf (>=6.33.0,<7.0.0)"
 ]
 
 
