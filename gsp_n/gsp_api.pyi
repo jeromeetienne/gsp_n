@@ -13,7 +13,7 @@ class BufferType(Enum):
     vec2 = 5
     vec3 = 6
     vec4 = 7
-    # others
+    # LATER: add more types for completeness
 
 class Constants:
     """Common constants like colors."""
