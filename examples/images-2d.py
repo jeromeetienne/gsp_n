@@ -1,5 +1,5 @@
 import gsp_n as gsp
-from gsp_n import Constants, BufferType, Buffer, Texture2D, Images, Camera, MatplotlibRenderer, Canvas, Viewport, Mat4x4, DataSource
+from gsp_n import Constants, BufferType, Buffer, Texture2D, Images, Camera, MatplotlibRenderer, Canvas, Viewport, Mat4, DataSource
 import numpy as np
 
 
@@ -12,9 +12,9 @@ def main():
     canvas.add(viewport)
 
     # =============================================================================
-    # Add an image
+    # Add an image + example of DataSource to Buffer conversion
     # =============================================================================
-    # texture buffer - example of DataSource to Buffer conversion
+    # texture
     texture_buffer = DataSource("path/to/your/image.png").to_buffer(gsp.BufferType.uint8)
     texture = Texture2D(texture_buffer)
 
@@ -30,8 +30,8 @@ def main():
     # Render the canvas
     # =============================================================================
     # Create a camera
-    view_matrix = Mat4x4()
-    projection_matrix = Mat4x4([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]])
+    view_matrix = Mat4()
+    projection_matrix = Mat4([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]])
     camera = Camera(view_matrix, projection_matrix)
 
     # Create a renderer and render the scene

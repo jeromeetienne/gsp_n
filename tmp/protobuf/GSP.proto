@@ -222,9 +222,9 @@ message TRANSFORM_SET_BASE {
 
 message TRANSFORM_SET_LEFT {
     uint32 id = 1;
-    oneof right {
-      uint32 right_buffer = 2;
-      uint32 right_transform = 3;
+    oneof left {
+      uint32 left_buffer = 2;
+      uint32 left_transform = 3;
     }
 }
 

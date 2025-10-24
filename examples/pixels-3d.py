@@ -1,5 +1,5 @@
 import gsp_n as gsp
-from gsp_n import Constants, BufferType, Buffer, Texture2D, Images, Pixels,Camera, MatplotlibRenderer, Canvas, Viewport, Mat4x4, DataSource
+from gsp_n import Constants, BufferType, Buffer, Texture2D, Images, Pixels,Camera, MatplotlibRenderer, Canvas, Viewport, Mat4, DataSource
 import numpy as np
 
 
@@ -28,15 +28,15 @@ def main():
     viewport.add(pixels)
 
     # Set the model matrix for the visual
-    model_matrix = Mat4x4.from_numpy(np.eye(4, dtype=np.float32))
+    model_matrix = Mat4.from_numpy(np.eye(4, dtype=np.float32))
     pixels.set_model_matrix(model_matrix)
 
     # =============================================================================
     # Render the canvas
     # =============================================================================
     # Create a camera
-    view_matrix = Mat4x4()
-    projection_matrix = Mat4x4([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]])
+    view_matrix = Mat4()
+    projection_matrix = Mat4([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]])
     camera = Camera(view_matrix, projection_matrix)
 
     # Create a renderer and render the scene
