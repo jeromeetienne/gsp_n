@@ -2,8 +2,8 @@
 import os
 
 # local imports
-from gsp.core.buffer import Buffer, BufferType
-from gsp.transforms.transform import Transform, TransformLink, TransformDataSource
+from gsp.types.buffer import Buffer, BufferType
+from gsp.transforms.transform import Transform, TransformAccessor, TransformLink, TransformDataSource
 
 
 __dirname__  = os.path.dirname(os.path.abspath(__file__))
@@ -14,6 +14,7 @@ def main():
 
     image_url = f"file://{__dirname__}/images/image.png"
     transformChain.add(TransformDataSource(image_url, BufferType.uint8))
+    transformChain.add(TransformAccessor('r'))
 
     buffer = transformChain.to_buffer()
     print(buffer)
