@@ -43,9 +43,7 @@ def main():
     # =============================================================================
     # Create a camera
     view_matrix = Mat4()
-    projection_matrix = Mat4(
-        np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]], dtype=np.float32)
-    )
+    projection_matrix = Mat4([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]])
     camera = Camera(view_matrix, projection_matrix)
 
     # Create a renderer and render the scene

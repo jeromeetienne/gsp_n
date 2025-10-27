@@ -1,16 +1,13 @@
 # local imports
-from gsp.core import Buffer, BufferType
+from gsp.types import Buffer, BufferType
 
 
 def main():
     buffer = Buffer(10, BufferType.uint32)
     print("Buffer created:", buffer)
 
-    # create a bytearray of 40 bytes (10 uint32)
-    byte_array = bytearray(b'\x00\x00\x00\x00' * 10)
-
     # Set data
-    buffer.set_data(bytearray(b'\x00\x00\x00\x22' * 2), 0, 2)
+    buffer.set_data(bytes(b'\x00\x00\x00\x22' * 2), 0, 2)
     print("Buffer data set.")
 
     # Get data
