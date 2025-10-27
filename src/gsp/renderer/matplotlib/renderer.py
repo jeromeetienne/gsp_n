@@ -10,3 +10,4 @@ class MatplotlibRenderer:
     def render(self, visuals: list[VisualBase], cameras: list[Camera]):
         # Rendering logic using matplotlib goes here
         pass
+
