@@ -47,23 +47,35 @@ class CanvasSetSize(GspMessage):
 @dataclass
 class Viewport(GspMessage):
     viewport_uuid: str
+    """unique identifier for the viewport"""
     canvas_uuid: str
+    """unique identifier for the parent canvas"""
     x: int
+    """x position of the viewport"""
     y: int
+    """y position of the viewport"""
     width: int
+    """width of the viewport"""
     height: int
+    """height of the viewport"""
 
 @dataclass
 class ViewportSetPosition(GspMessage):
     viewport_uuid: str
+    """unique identifier for the viewport"""
     x: int
+    """x position of the viewport"""
     y: int
+    """y position of the viewport"""
 
 @dataclass
 class ViewportSetSize(GspMessage):
     viewport_uuid: str
+    """unique identifier for the viewport"""
     width: int
+    """width of the viewport"""
     height: int
+    """height of the viewport"""
 
 # =============================================================================
 # 
@@ -77,7 +89,9 @@ class TransformLink(GspMessage):
 @dataclass
 class TransformLinkOperator(TransformLink):
     operator: Literal['add', 'sub', 'mul', 'div']
+    """operator to apply between the two operands"""
     operand: float | int
+    """second operand for the operation"""
 
 @dataclass
 class Transform(GspMessage):
