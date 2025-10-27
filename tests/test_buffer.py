@@ -2,8 +2,8 @@
 
 import pytest
 import numpy as np
-from src.gsp.core.buffer import Buffer
-from src.gsp.core.buffer_type import BufferType
+from gsp.types.buffer import Buffer
+from gsp.types.buffer_type import BufferType
 
 
 class TestBufferInitialization:
