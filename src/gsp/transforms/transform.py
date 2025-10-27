@@ -70,7 +70,7 @@ class TransformDataSource(TransformLink):
             # Build a new buffer
             count = image_data.nbytes // item_size
             new_buffer = Buffer(count, self._buffer_type)
-            new_buffer.set_data(image_data.tobytes(), 0, count)
+            new_buffer.set_data(bytearray(image_data.tobytes()), 0, count)
             return new_buffer
         else:
             # Load data from URI
@@ -83,7 +83,7 @@ class TransformDataSource(TransformLink):
 
             count = len(content) // item_size
             new_buffer = Buffer(count, self._buffer_type)
-            new_buffer.set_data(content, 0, count)
+            new_buffer.set_data(bytearray(content), 0, count)
             return new_buffer
 
 
@@ -109,5 +109,7 @@ class TransformAccessor(TransformLink):
         # Create a new buffer for the accessed field
         new_count = buffer.get_count() // 4
         new_buffer = Buffer(new_count, buffer.get_type())
+
+        raise NotImplementedError("TransformAccessor.apply is not implemented yet.")
         
         return new_buffer

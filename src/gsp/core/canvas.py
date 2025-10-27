@@ -6,10 +6,10 @@ class Canvas:
         self.width = width
         self.height = height
         self.dpi = dpi
-        self.viewports = []
+        self.viewports: list[Viewport] = []
 
-    def add(self, viewport):
+    def add(self, viewport: Viewport):
         self.viewports.append(viewport)
 
-    def remove(self, viewport):
-        self.viewports.remove(viewport)    
+    def remove(self, viewport: Viewport):
+        self.viewports.remove(viewport)

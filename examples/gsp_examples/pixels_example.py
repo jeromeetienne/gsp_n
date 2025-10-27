@@ -20,13 +20,16 @@ def main():
     # - various ways to create Buffers
     # =============================================================================
     point_count = 1024
+
     # Random positions - Create buffer from numpy array
     positions_buffer = Buffer.from_numpy(
         np.random.rand(point_count, 3).astype(np.float32)
     )
+
     # all pixels red - Create buffer and fill it with a constant
     color_numpy = np.array([255, 0, 0, 255], dtype=np.uint8)
     colors_buffer = Buffer.from_numpy(color_numpy)
+
     # one group for all points - create buffer and set value with immediate assignment
     groups_buffer = Buffer(1, BufferType.uint32)
     groups_buffer.set_data(bytearray(b'\x00\x00\x00\x01'), 0, 1)

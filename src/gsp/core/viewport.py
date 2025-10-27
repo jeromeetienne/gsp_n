@@ -1,5 +1,11 @@
+
+# pip imports
+import uuid
+
+
 class Viewport:
     def __init__(self, x: int, y: int, width: int, height: int):
+        self.uuid = str(uuid.uuid4())
         self.x = x
         self.y = y
         self.width = width
