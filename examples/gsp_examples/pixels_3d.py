@@ -29,7 +29,7 @@ def main():
     colors_buffer = Buffer.from_numpy(color_numpy)
     # one group for all points - create buffer and set value with immediate assignment
     groups_buffer = Buffer(1, BufferType.uint32)
-    groups_buffer.set_data(bytes(b'\x00\x00\x00\x01'), 0, 1)
+    groups_buffer.set_data(bytearray(b'\x00\x00\x00\x01'), 0, 1)
 
     pixels = Pixels(positions_buffer, colors_buffer, groups_buffer)
     viewport.add(pixels)
