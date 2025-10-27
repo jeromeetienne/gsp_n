@@ -1,0 +1,63 @@
+# local imports
+from gsp.core.camera import Camera
+from gsp.core.canvas import Canvas
+from gsp.core.viewport import Viewport
+from gsp.core.visual_base import VisualBase
+import gsp.renderer.json.gsp_messages_pydantic as gsp_messages
+
+class JsonRenderer:
+    def __init__(self, canvas: Canvas):
+        self.canvas = canvas
+        self.message_id_counter = 0
+
+    def render(self, viewports: list[Viewport], visuals: list[VisualBase], cameras: list[Camera]):
+        """ Render the given viewports, visuals, and cameras to JSON messages. """
+        messages = []
+
+        # create canvas message
+        canvas_msg = gsp_messages.CanvasCreate(
+            command_name='CanvasCreate',
+            message_id=self.get_message_id(),
+            canvas_uuid=self.canvas.uuid,
+            width=self.canvas.width,
+            height=self.canvas.height,
+            dpi=self.canvas.dpi
+        )
+        messages.append(canvas_msg)
+
+        # create viewport messages
+        for viewport in viewports:
+            # create viewport message
+            viewport_msg = gsp_messages.ViewportCreate(
+                command_name='ViewportCreate',
+                message_id=self.get_message_id(),
+                viewport_uuid=viewport.uuid,
+                canvas_uuid=self.canvas.uuid,
+                x=viewport.x,
+                y=viewport.y,
+                width=viewport.width,
+                height=viewport.height
+            )
+            messages.append(viewport_msg)
+
+        # # loop over each viewport, visual, camera triplet to render them
+        # for viewport, visual, camera in zip(viewports, visuals, cameras):
+        #     # create viewport message
+        #     viewport_msg = gsp_messages.ViewportCreate(
+        #         message_id=self.get_message_id(),
+        #         viewport_uuid=viewport.uuid,
+        #         canvas_uuid=self.canvas.uuid,
+        #         x=viewport.x,
+        #         y=viewport.y,
+        #         width=viewport.width,
+        #         height=viewport.height
+        #     )
+        #     messages.append(viewport_msg)
+        #     # Note: Visual and Camera messages would be created here similarly
+            
+        return messages
+
+    def get_message_id(self) -> int:
+        """ Get the next message ID. """
+        self.message_id_counter += 1
+        return self.message_id_counter

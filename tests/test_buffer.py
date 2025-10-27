@@ -26,7 +26,7 @@ class TestBufferInitialization:
         types_to_test = [
             BufferType.float32,
             BufferType.uint32,
-            BufferType.color,
+            BufferType.rgba8,
             BufferType.uint8,
             BufferType.int32,
             BufferType.int8,
@@ -173,7 +173,6 @@ class TestBufferNumpyConversion:
         scalar_types = [
             (BufferType.float32, np.float32),
             (BufferType.uint32, np.uint32),
-            (BufferType.color, np.uint32),
             (BufferType.uint8, np.uint8),
             (BufferType.int32, np.int32),
             (BufferType.int8, np.int8),
