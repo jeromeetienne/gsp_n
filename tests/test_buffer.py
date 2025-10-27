@@ -122,14 +122,14 @@ class TestBufferBytesConversion:
         test_data = bytearray([1, 2, 3, 4, 5])
         buffer.set_data(test_data, offset=0, count=5)
         
-        result = buffer.to_bytes()
+        result = buffer.to_bytearray()
         assert isinstance(result, bytearray)
         assert len(result) == 5
     
     def test_from_bytes_valid_data(self):
         """Test creating buffer from valid byte data."""
         test_data = bytearray([10, 20, 30, 40])
-        buffer = Buffer.from_bytes(test_data, BufferType.uint8)
+        buffer = Buffer.from_bytearray(test_data, BufferType.uint8)
         
         assert buffer.get_count() == 4
         assert buffer.get_type() == BufferType.uint8
@@ -138,7 +138,7 @@ class TestBufferBytesConversion:
         """Test creating buffer from bytes with larger types."""
         # vec2 requires 8 bytes per element
         test_data = bytearray(range(24))  # 3 vec2s = 24 bytes
-        buffer = Buffer.from_bytes(test_data, BufferType.vec2)
+        buffer = Buffer.from_bytearray(test_data, BufferType.vec2)
         
         assert buffer.get_count() == 3
         assert buffer.get_type() == BufferType.vec2
@@ -149,7 +149,7 @@ class TestBufferBytesConversion:
         test_data = bytearray(range(10))
         
         with pytest.raises(AssertionError):
-            Buffer.from_bytes(test_data, BufferType.vec3)
+            Buffer.from_bytearray(test_data, BufferType.vec3)
     
     def test_bytes_roundtrip(self):
         """Test roundtrip conversion: Buffer -> bytes -> Buffer."""
@@ -158,8 +158,8 @@ class TestBufferBytesConversion:
         original.set_data(test_data, offset=0, count=3)
         
         # Convert to bytes and back
-        bytes_data = original.to_bytes()
-        reconstructed = Buffer.from_bytes(bytes_data, BufferType.uint32)
+        bytes_data = original.to_bytearray()
+        reconstructed = Buffer.from_bytearray(bytes_data, BufferType.uint32)
         
         assert reconstructed.get_count() == original.get_count()
         assert reconstructed.get_type() == original.get_type()
@@ -236,7 +236,7 @@ class TestBufferEdgeCases:
         buffer = Buffer(0, BufferType.float32)
         
         # Should be able to get bytes from empty buffer
-        bytes_data = buffer.to_bytes()
+        bytes_data = buffer.to_bytearray()
         assert len(bytes_data) == 0
         
         # Should be able to convert to numpy
@@ -281,7 +281,7 @@ class TestBufferWithDifferentSizes:
         
         for buffer_type, count, expected_bytes in test_cases:
             buffer = Buffer(count, buffer_type)
-            bytes_data = buffer.to_bytes()
+            bytes_data = buffer.to_bytearray()
             assert len(bytes_data) == expected_bytes
     
     def test_partial_data_operations(self):

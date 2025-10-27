@@ -16,7 +16,7 @@ class Buffer():
         item_size = BufferType.get_item_size(buffer_type)
         self._count = count
         self._type = buffer_type
-        self._bytearray = bytes(count * item_size)
+        self._bytearray = bytearray(count * item_size)
 
     def __repr__(self) -> str:
         return f"Buffer(count={self._count}, type={self._type})"
@@ -31,7 +31,7 @@ class Buffer():
         new_buffer.set_data(self._bytearray[start:end], 0, count)
         return new_buffer
 
-    def set_data(self, _bytes: bytes, offset: int, count: int) -> None:
+    def set_data(self, _bytearray: bytearray, offset: int, count: int) -> None:
         """Copy count elements starting from offset in the source bytearray."""
         item_size = BufferType.get_item_size(self._type)
 
@@ -40,7 +40,7 @@ class Buffer():
 
         start = offset * item_size
         end = start + count * item_size
-        self._bytearray = self._bytearray[:start] + _bytes[0:count * item_size] + self._bytearray[end:]
+        self._bytearray = self._bytearray[:start] + _bytearray[0:count * item_size] + self._bytearray[end:]
 
     def get_count(self) -> int:
         """Return the number of elements in the buffer."""
@@ -62,16 +62,16 @@ class Buffer():
     def from_numpy(ndarray: numpy.ndarray) -> "Buffer": ...
 
     # bytes conversion
-    def to_bytes(self) -> bytearray:
+    def to_bytearray(self) -> bytearray:
         return bytearray(self._bytearray)
 
     @staticmethod
-    def from_bytes(_bytearray: bytearray, buffer_type: BufferType) -> "Buffer":
+    def from_bytearray(_bytearray: bytearray, buffer_type: BufferType) -> "Buffer":
         item_size = BufferType.get_item_size(buffer_type)
         # sanity check
         assert len(_bytearray) % item_size == 0, f"data size {len(_bytearray)} is not aligned with buffer type item size {item_size}"
 
         # create buffer
         buffer = Buffer(len(_bytearray) // item_size, buffer_type)
-        buffer.set_data(bytes(_bytearray), 0, buffer.get_count())
+        buffer.set_data(_bytearray, 0, buffer.get_count())
         return buffer
