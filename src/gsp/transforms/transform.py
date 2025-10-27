@@ -1,7 +1,9 @@
 # local imports
 from ..types import BufferType, Buffer
 
-
+# =============================================================================
+# TransformLink
+# =============================================================================
 class TransformLink:
     """Base class for a link in a Transform chain."""
 
@@ -9,6 +11,10 @@ class TransformLink:
         """Apply the transformation to the given buffer and return a new buffer."""
         raise NotImplementedError("TransformLink.apply is not implemented yet.")
 
+
+# =============================================================================
+# Transform
+# =============================================================================
 class Transform:
     """Chain of transformations to apply to data."""
 

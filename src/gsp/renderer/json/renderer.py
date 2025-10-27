@@ -4,6 +4,7 @@ from gsp.core.canvas import Canvas
 from gsp.core.viewport import Viewport
 from gsp.core.visual_base import VisualBase
 import gsp.renderer.json.gsp_messages_pydantic as gsp_messages
+from gsp.visuals.points import Points
 
 class JsonRenderer:
     def __init__(self, canvas: Canvas):
@@ -40,20 +41,13 @@ class JsonRenderer:
             )
             messages.append(viewport_msg)
 
-        # # loop over each viewport, visual, camera triplet to render them
-        # for viewport, visual, camera in zip(viewports, visuals, cameras):
-        #     # create viewport message
-        #     viewport_msg = gsp_messages.ViewportCreate(
-        #         message_id=self.get_message_id(),
-        #         viewport_uuid=viewport.uuid,
-        #         canvas_uuid=self.canvas.uuid,
-        #         x=viewport.x,
-        #         y=viewport.y,
-        #         width=viewport.width,
-        #         height=viewport.height
-        #     )
-        #     messages.append(viewport_msg)
-        #     # Note: Visual and Camera messages would be created here similarly
+        
+
+        # create visual messages
+        for visual in visuals:
+            if isinstance(visual, Points):
+                self.render_points(visual)
+                messages.extend(visual_msg)
             
         return messages
 
@@ -61,3 +55,11 @@ class JsonRenderer:
         """ Get the next message ID. """
         self.message_id_counter += 1
         return self.message_id_counter
+
+    def render_points(self, points: Points):
+        """ Render a Points visual to JSON messages. """
+        visual_msg = []
+
+        
+
+        return visual_msg

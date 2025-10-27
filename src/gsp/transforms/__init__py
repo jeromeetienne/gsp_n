@@ -1,1 +1,3 @@
-from .transform import Transform, TransformLink, TransformDataSource
+from .transform import Transform, TransformLink
+from .transform_accessor import TransformAccessor
+from .transform_data_source import TransformDataSource

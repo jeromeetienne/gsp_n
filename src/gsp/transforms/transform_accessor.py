@@ -31,5 +31,3 @@ class TransformAccessor(TransformLink):
         new_buffer = Buffer(new_count, buffer.get_type())
 
         raise NotImplementedError("TransformAccessor.apply is not implemented yet.")
-        
-        return new_buffer

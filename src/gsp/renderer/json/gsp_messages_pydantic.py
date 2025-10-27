@@ -96,6 +96,8 @@ class TransformLinkOperator(TransformLink):
 
 @dataclass
 class Transform(GspMessage):
+    transform_uuid: str
+    """unique identifier for the transform"""
     links: list[TransformLink]
     """list of links defining the transform"""
 
@@ -132,10 +134,16 @@ class Visual(GspMessage):
     """unique identifier for the visual"""
 
 @dataclass
-class Pixels(Visual):
+class Points(Visual):
     positions: TransBuffer
-    """Transform or Buffer representing pixel positions"""
-    colors: TransBuffer
-    """Transform or Buffer representing pixel colors"""
+    """Transform or Buffer representing point positions"""
+    sizes: TransBuffer
+    """Transform or Buffer representing point sizes"""
+    face_colors: TransBuffer
+    """Transform or Buffer representing point face colors"""
+    edge_colors: TransBuffer
+    """Transform or Buffer representing point edge colors"""
+    edge_widths: TransBuffer
+    """Transform or Buffer representing point edge widths"""
     groups: TransBuffer
-    """Transform or Buffer representing pixel groups"""
+    """Transform or Buffer representing point groups"""
