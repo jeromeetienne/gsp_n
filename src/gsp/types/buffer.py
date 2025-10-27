@@ -2,7 +2,7 @@
 from enum import Enum
 
 # pip imports
-import numpy
+import numpy as np
 
 # local imports
 from . buffer_type import BufferType
@@ -51,15 +51,21 @@ class Buffer():
         return self._type
 
     # numpy conversion
-    def to_numpy(self) -> numpy.ndarray:
+    def to_numpy(self) -> np.ndarray:
+        if( self.get_type() == BufferType.rgba8 ):
+            # Special case for color buffer: interpret as uint8 and reshape
+            numpy_dtype = np.dtype(np.uint8)
+            ndarray = np.frombuffer(self._bytearray, dtype=numpy_dtype).reshape((self._count, 4))
+            return ndarray
+        
         numpy_dtype = BufferType.to_numpy_dtype(self._type)
         numpy_shape = BufferType.to_numpy_shape(self._type)
-        ndarray = numpy.frombuffer(self._bytearray, dtype=numpy_dtype).reshape((self._count, ) + numpy_shape)
+        ndarray = np.frombuffer(self._bytearray, dtype=numpy_dtype).reshape((self._count, ) + numpy_shape)
         return ndarray
 
     @staticmethod
-    def from_numpy(ndarray: numpy.ndarray) -> "Buffer":
-        buffer_type = BufferType.from_numpy(ndarray.dtype)
+    def from_numpy(ndarray: np.ndarray) -> "Buffer":
+        buffer_type = BufferType.from_numpy(ndarray)
         count = ndarray.shape[0]
 
         buffer = Buffer(count, buffer_type)

@@ -10,13 +10,13 @@ class BufferType(Enum):
 
     float32 = 0
     uint32 = 1
-    color = 1
     uint8 = 2
     int32 = 3
     int8 = 4
     vec2 = 5
     vec3 = 6
     vec4 = 7
+    rgba8 = 8  # RGBA
 
     @staticmethod
     def get_item_size(buffer_type: "BufferType") -> int:
@@ -24,8 +24,6 @@ class BufferType(Enum):
         if buffer_type == BufferType.float32:
             return 4
         elif buffer_type == BufferType.uint32:
-            return 4
-        elif buffer_type == BufferType.color:
             return 4
         elif buffer_type == BufferType.uint8:
             return 1
@@ -39,6 +37,8 @@ class BufferType(Enum):
             return 12 # 3 * 4 bytes (float32)
         elif buffer_type == BufferType.vec4:
             return 16 # 4 * 4 bytes (float32)
+        elif buffer_type == BufferType.rgba8:
+            return 4
         else:
             raise ValueError(f"Unknown BufferType: {buffer_type}")
 
@@ -46,7 +46,7 @@ class BufferType(Enum):
     def to_numpy_dtype(buffer_type: "BufferType") -> np.dtype:
         if buffer_type == BufferType.float32:
             return np.dtype(np.float32)
-        elif buffer_type == BufferType.uint32 or buffer_type == BufferType.color:
+        elif buffer_type == BufferType.uint32:
             return np.dtype(np.uint32)
         elif buffer_type == BufferType.uint8:
             return np.dtype(np.uint8)
@@ -56,17 +56,21 @@ class BufferType(Enum):
             return np.dtype(np.int8)
         elif buffer_type in (BufferType.vec2, BufferType.vec3, BufferType.vec4):
             return np.dtype(np.float32)
+        elif buffer_type == BufferType.rgba8:
+            return np.dtype(np.uint32)
         else:
             raise ValueError(f"Unknown BufferType: {buffer_type}")
         
     @staticmethod
     def from_numpy(ndarray: np.ndarray) -> "BufferType":
-        if ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 2:
+        if len(ndarray.shape) == 2 and ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 2:
             return BufferType.vec2
-        if ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 3:
+        elif len(ndarray.shape) == 2 and ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 3:
             return BufferType.vec3
-        if ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 4:
+        elif len(ndarray.shape) == 2 and ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 4:
             return BufferType.vec4
+        elif len(ndarray.shape) == 1 and ndarray.dtype == np.dtype(np.float32):
+            return BufferType.float32
         else:
             raise ValueError(f"Cannot convert numpy dtype to BufferType")
     
@@ -77,6 +81,8 @@ class BufferType(Enum):
         elif buffer_type == BufferType.vec3:
             return (3,)
         elif buffer_type == BufferType.vec4:
+            return (4,)
+        elif buffer_type == BufferType.rgba8:
             return (4,)
         else:
             return (1,)

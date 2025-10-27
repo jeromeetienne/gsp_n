@@ -5,16 +5,16 @@ import matplotlib.pyplot
 
 # local imports
 from gsp.core import Canvas, Viewport
-from gsp.visuals import Pixels
+from gsp.visuals import Points
 from gsp.types import Buffer, BufferType
 from gsp.math import Mat4
 from gsp.core import Camera
-from gsp.renderer.matplotlib.renderer import MatplotlibRenderer
+from gsp_matplotlib.renderer.renderer import MatplotlibRenderer
 
 
 def main():
     # Create a canvas
-    canvas = Canvas(800, 600, 96.0)
+    canvas = Canvas(100, 100, 96.0)
 
     # Create a viewport and add it to the canvas
     viewport = Viewport(0, 0, 400, 300)
@@ -27,19 +27,31 @@ def main():
     point_count = 1024
 
     # Random positions - Create buffer from numpy array
-    positions_buffer = Buffer.from_numpy(
-        np.random.rand(point_count, 3).astype(np.float32)
-    )
+    positions_np = np.random.rand(point_count, 3).astype(np.float32) * 2.0 - 1
+    positions_buffer = Buffer.from_numpy(positions_np)
+
+    # Sizes - Create buffer and set data with numpy array
+    sizes_np = np.array([50.0 for _ in range(point_count)], dtype=np.float32)
+    sizes_buffer = Buffer.from_numpy(sizes_np)
 
     # all pixels red - Create buffer and fill it with a constant
-    color_numpy = np.array([255, 0, 0, 255], dtype=np.uint8)
-    colors_buffer = Buffer.from_numpy(color_numpy)
+    face_colors_buffer = Buffer(1, BufferType.rgba8)
+    face_colors_buffer.set_data(bytearray(b"\xff\x00\x00\xff"), 0, 1)
+
+    # Edge colors - Create buffer and fill it with a constant
+    edge_colors_buffer = Buffer(1, BufferType.rgba8)
+    edge_colors_buffer.set_data(bytearray(b"\x00\x00\x00\xff"), 0, 1)
+
+    # Edge widths - Create buffer and fill it with a constant
+    edge_widths_buffer = Buffer(1, BufferType.uint32)
+    edge_widths_buffer.set_data(bytearray(np.array([1], dtype=np.uint32).tobytes()), 0, 1)
 
     # one group for all points - create buffer and set value with immediate assignment
     groups_buffer = Buffer(1, BufferType.uint32)
-    groups_buffer.set_data(bytearray(b'\x00\x00\x00\x01'), 0, 1)
+    groups_buffer.set_data(bytearray((2).to_bytes(4, byteorder="big")), 0, 1)
 
-    pixels = Pixels(positions_buffer, colors_buffer, groups_buffer)
+    # Create the Points visual and add it to the viewport
+    pixels = Points(positions_buffer, sizes_buffer, face_colors_buffer, edge_colors_buffer, edge_widths_buffer, groups_buffer)
     viewport.add(pixels)
 
     # Set the model matrix for the visual
@@ -51,14 +63,15 @@ def main():
     # =============================================================================
     # Create a camera
     view_matrix = Mat4()
-    projection_matrix = Mat4([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]])
+    projection_matrix = Mat4(
+        [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]]
+    )
     camera = Camera(view_matrix, projection_matrix)
 
     # Create a renderer and render the scene
     matplotlibRenderer = MatplotlibRenderer(canvas)
     matplotlibRenderer.render([viewport], [pixels], [camera])
 
-    
     matplotlib.pyplot.show()
 
 

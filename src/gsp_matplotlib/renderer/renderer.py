@@ -8,10 +8,11 @@ from gsp.core.camera import Camera
 from gsp.core.canvas import Canvas
 from gsp.core.viewport import Viewport
 from gsp.core.visual_base import VisualBase
-from gsp.visuals.pixels import Pixels
+from gsp.visuals.points import Points
 
 
 class MatplotlibRenderer:
+
     def __init__(self, canvas: Canvas):
         self.canvas = canvas
         self._axes: dict[str, matplotlib.axes.Axes] = {}
@@ -31,26 +32,27 @@ class MatplotlibRenderer:
             # - https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_model_view_projection
             axes.set_xlim(-1, 1)
             axes.set_ylim(-1, 1)
-
+            # store axes for this viewport
             self._axes[viewport.uuid] = axes
 
-
     def render(self, viewports: list[Viewport], visuals: list[VisualBase], cameras: list[Camera]):
-        # Rendering logic using matplotlib goes here
 
         # sanity check 
         assert len(viewports) == len(visuals) == len(cameras), f'Mismatched lengths: {len(viewports)} viewports, {len(visuals)} visuals, {len(cameras)} cameras'
 
+        # loop over each viewport, visual, camera triplet to render them
         for viewport, visual, camera in zip(viewports, visuals, cameras):
             self._render_visual(viewport, visual, camera)
 
-    def _render_visual(self, viewport: Viewport, visual: VisualBase, camera: Camera):
-        axes = self._axes[viewport.uuid]
-        if isinstance(visual, Pixels):
-            from gsp.renderer.matplotlib.renderer_pixels import RendererPixels
 
-            RendererPixels.render_pixels(self, axes, visual, camera)
-            
+    def _render_visual(self, viewport: Viewport, visual: VisualBase, camera: Camera):
+        """ Render a single visual in a given viewport using the specified camera. """
+        axes = self._axes[viewport.uuid]
+        if isinstance(visual, Points):
+            from gsp_matplotlib.renderer.renderer_points import RendererPoints
+            RendererPoints.render(self, axes, visual, camera)
+        else:
+            raise NotImplementedError(f'Rendering for visual type {type(visual)} is not implemented.')
 
     def get_axes_for_viewport(self, viewport: Viewport) -> matplotlib.axes.Axes:
         return self._axes[viewport.uuid]
