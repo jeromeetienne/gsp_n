@@ -3,4 +3,4 @@ import uuid
 
 class VisualBase:
     def __init__(self):
-        self.uuid = uuid.uuid4()
+        self.uuid = str(uuid.uuid4())

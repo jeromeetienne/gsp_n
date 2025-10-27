@@ -1,4 +1,9 @@
+# pip imports
 import numpy as np
+import matplotlib.pyplot
+
+
+# local imports
 from gsp.core import Canvas, Viewport
 from gsp.visuals import Pixels
 from gsp.types import Buffer, BufferType
@@ -51,7 +56,10 @@ def main():
 
     # Create a renderer and render the scene
     matplotlibRenderer = MatplotlibRenderer(canvas)
-    matplotlibRenderer.render([pixels], [camera])
+    matplotlibRenderer.render([viewport], [pixels], [camera])
+
+    
+    matplotlib.pyplot.show()
 
 
 if __name__ == "__main__":

@@ -58,6 +58,17 @@ class BufferType(Enum):
             return np.dtype(np.float32)
         else:
             raise ValueError(f"Unknown BufferType: {buffer_type}")
+        
+    @staticmethod
+    def from_numpy(ndarray: np.ndarray) -> "BufferType":
+        if ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 2:
+            return BufferType.vec2
+        if ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 3:
+            return BufferType.vec3
+        if ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 4:
+            return BufferType.vec4
+        else:
+            raise ValueError(f"Cannot convert numpy dtype to BufferType")
     
     @staticmethod
     def to_numpy_shape(buffer_type: "BufferType") -> tuple:

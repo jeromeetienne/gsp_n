@@ -1,7 +1,5 @@
-
 # pip imports
 import uuid
-
 
 class Viewport:
     def __init__(self, x: int, y: int, width: int, height: int):

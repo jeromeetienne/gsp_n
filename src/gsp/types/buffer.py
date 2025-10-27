@@ -50,7 +50,6 @@ class Buffer():
         """Return the type of each element in the buffer."""
         return self._type
 
-
     # numpy conversion
     def to_numpy(self) -> numpy.ndarray:
         numpy_dtype = BufferType.to_numpy_dtype(self._type)
@@ -59,7 +58,13 @@ class Buffer():
         return ndarray
 
     @staticmethod
-    def from_numpy(ndarray: numpy.ndarray) -> "Buffer": ...
+    def from_numpy(ndarray: numpy.ndarray) -> "Buffer":
+        buffer_type = BufferType.from_numpy(ndarray.dtype)
+        count = ndarray.shape[0]
+
+        buffer = Buffer(count, buffer_type)
+        buffer.set_data(bytearray(ndarray.tobytes()), 0, buffer.get_count())
+        return buffer
 
     # bytes conversion
     def to_bytearray(self) -> bytearray:

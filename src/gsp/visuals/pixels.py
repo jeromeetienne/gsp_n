@@ -2,7 +2,6 @@ from ..core.visual_base import VisualBase
 from ..math.mat4 import Mat4
 from ..types.types import TransBuf
 
-
 class Pixels(VisualBase):
     def __init__(self, positions: TransBuf, colors: TransBuf, groups: TransBuf):
         super().__init__()
