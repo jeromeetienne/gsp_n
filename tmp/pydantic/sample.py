@@ -36,7 +36,7 @@ create_viewport_msg = Viewport(
 # Pixels
 # =============================================================================
 
-buffer_position_msg = Buffer(
+positions_buffer_msg = Buffer(
     message_id=5,
     buffer_uuid='423e4567-e89b-12d3-a456-426614174003',
     count=4,
@@ -44,7 +44,7 @@ buffer_position_msg = Buffer(
     data=b'\x00\x00\x00\x00\x00\x00\x80\x3f\x00\x00\x00\x00\x00\x00\x00\x40'
 )
 
-buffer_color_msg = Buffer(
+colors_buffer_msg = Buffer(
     message_id=6,
     buffer_uuid='523e4567-e89b-12d3-a456-426614174004',
     count=4,
@@ -52,7 +52,7 @@ buffer_color_msg = Buffer(
     data=b'\x00\x00\x00\x00\x00\x00\x80\x3f\x00\x00\x00\x00\x00\x00\x00\x40'
 )
 
-buffer_groups_msg = Buffer(
+groups_buffer_msg = Buffer(
     message_id=7,
     buffer_uuid='623e4567-e89b-12d3-a456-426614174005',
     count=2,
@@ -62,10 +62,8 @@ buffer_groups_msg = Buffer(
 
 create_pixels_msg = Pixels(
     message_id=4,
-    viewport_uuid=create_viewport_msg.viewport_uuid,
-    positions=buffer_position_msg.buffer_uuid,
-    colors=buffer_color_msg.buffer_uuid,
-    groups=buffer_groups_msg.buffer_uuid,
+    visual_uuid=create_viewport_msg.viewport_uuid,
+    positions=positions_buffer_msg,
+    colors=colors_buffer_msg,
+    groups=groups_buffer_msg,
 )
-
-
