@@ -61,7 +61,7 @@ def main():
 
     # Create a renderer and render the scene
     matplotlibRenderer = MatplotlibRenderer(canvas)
-    matplotlibRenderer.render([images], [camera])
+    matplotlibRenderer.render([viewport], [images], [camera])
 
 
 if __name__ == "__main__":
