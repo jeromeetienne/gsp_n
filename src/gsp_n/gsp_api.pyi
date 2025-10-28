@@ -15,14 +15,15 @@ class BufferType(Enum):
     vec2 = 5
     vec3 = 6
     vec4 = 7
+    rgba8 = 8
     # LATER: add more types for completeness
 
 class Constants:
     """Common constants like colors."""
 
-    red = numpy.uint32(0xFF0000FF)
-    green = numpy.uint32(0x00FF00FF)
-    blue = numpy.uint32(0x0000FFFF)
+    red = BufferType.rgba8(0xFF0000FF)
+    green = BufferType.rgba8(0x00FF00FF)
+    blue = BufferType.rgba8(0x0000FFFF)
 
 class Buffer:
     """typed array with single dimension
@@ -30,17 +31,10 @@ class Buffer:
     """
 
     def __init__(self, count: int, buffer_type: BufferType) -> None: ...
-    def get_data(self, offset: int, length: int) -> bytes: ...
-    def set_data(self, data: bytes, offset: int) -> None: ...
+    def get_data(self, offset: int, length: int) -> bytearray: ...
+    def set_data(self, data: bytearray, offset: int) -> None: ...
     def get_count(self) -> int: ...
     def get_type(self) -> BufferType: ...
-
-    # # Fill method overloads
-    # @overload
-    # def fill(self, value: numpy.uint32) -> "Buffer": ...
-    # @overload
-    # def fill(self, value: numpy.uint8) -> "Buffer": ...
-    # def fill(self, value: Union[numpy.uint32, numpy.uint8]) -> "Buffer": ...
 
     # numpy conversion
     def to_numpy(self) -> numpy.ndarray: ...
