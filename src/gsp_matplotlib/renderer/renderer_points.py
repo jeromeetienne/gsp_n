@@ -3,15 +3,14 @@ import typing
 import matplotlib.axes
 import matplotlib.collections
 import matplotlib.artist
-import numpy as np
 
 # local imports
 from gsp.core.camera import Camera
 from gsp.visuals.points import Points
 from gsp.types.transbuf_utils import TransBufUtils
 from gsp.types.transbuf import TransBuf
-from gsp_matplotlib.renderer.renderer import MatplotlibRenderer
-from gsp.types.bufferx import Bufferx
+from .renderer import MatplotlibRenderer
+from ..extra.bufferx import Bufferx
 
 
 class RendererPoints:

@@ -37,11 +37,11 @@ def main():
 
     # all pixels red - Create buffer and fill it with a constant
     face_colors_buffer = Buffer(group_count, BufferType.rgba8)
-    face_colors_buffer.set_data(bytearray(b"\xff\x00\x00\xff") * face_colors_buffer.get_count(), 0, 1)
+    face_colors_buffer.set_data(bytearray([255, 0, 0, 255]) * face_colors_buffer.get_count(), 0, 1)
 
     # Edge colors - Create buffer and fill it with a constant
     edge_colors_buffer = Buffer(group_count, BufferType.rgba8)
-    edge_colors_buffer.set_data(bytearray(b"\x00\x00\x00\xff") * edge_colors_buffer.get_count(), 0, 1)
+    edge_colors_buffer.set_data(bytearray(b"\x00\xff\x00\xff") * edge_colors_buffer.get_count(), 0, 1)
 
     # Edge widths - Create buffer and fill it with a constant
     edge_widths_buffer = Buffer(group_count, BufferType.uint32)
@@ -60,7 +60,7 @@ def main():
     # =============================================================================
 
     # Create a camera
-    view_matrix = Bufferx.identity4()
+    view_matrix = Bufferx.mat4_identity()
     projection_matrix = Buffer(1, BufferType.mat4)
     projection_matrix.set_data(bytearray(np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]], dtype=np.float32).tobytes()), 0, 1)
     camera = Camera(view_matrix, projection_matrix)

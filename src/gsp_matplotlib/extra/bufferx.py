@@ -8,7 +8,7 @@ class Bufferx:
     # =============================================================================
 
     @staticmethod
-    def identity4() -> Buffer:
+    def mat4_identity() -> Buffer:
         mat4_numpy = np.asarray([np.identity(4, dtype=np.float32)])
         buffer = Bufferx.from_numpy(mat4_numpy, BufferType.mat4)
         return buffer
