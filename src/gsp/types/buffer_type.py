@@ -5,6 +5,7 @@ from enum import Enum
 import numpy as np
 from dataclasses import dataclass
 
+
 class BufferType(Enum):
     """Type of elements in a Buffer. Heavily inspired by GLSL types."""
 
@@ -16,7 +17,8 @@ class BufferType(Enum):
     vec2 = 5
     vec3 = 6
     vec4 = 7
-    rgba8 = 8  # RGBA
+    mat4 = 8  # 4x4 matrix
+    rgba8 = 9  # RGBA
 
     @staticmethod
     def get_item_size(buffer_type: "BufferType") -> int:
@@ -34,11 +36,13 @@ class BufferType(Enum):
         elif buffer_type == BufferType.vec2:
             return 8  # 2 * 4 bytes (float32)
         elif buffer_type == BufferType.vec3:
-            return 12 # 3 * 4 bytes (float32)
+            return 12  # 3 * 4 bytes (float32)
         elif buffer_type == BufferType.vec4:
-            return 16 # 4 * 4 bytes (float32)
+            return 16  # 4 * 4 bytes (float32)
         elif buffer_type == BufferType.rgba8:
             return 4
+        elif buffer_type == BufferType.mat4:
+            return 64  # 16 * 4 bytes (float32)
         else:
             raise ValueError(f"Unknown BufferType: {buffer_type}")
 
@@ -60,7 +64,7 @@ class BufferType(Enum):
             return np.dtype(np.uint32)
         else:
             raise ValueError(f"Unknown BufferType: {buffer_type}")
-        
+
     @staticmethod
     def from_numpy(ndarray: np.ndarray) -> "BufferType":
         if len(ndarray.shape) == 2 and ndarray.dtype == np.dtype(np.float32) and ndarray.shape[1] == 2:
@@ -73,7 +77,7 @@ class BufferType(Enum):
             return BufferType.float32
         else:
             raise ValueError(f"Cannot convert numpy dtype to BufferType")
-    
+
     @staticmethod
     def to_numpy_shape(buffer_type: "BufferType") -> tuple:
         if buffer_type == BufferType.vec2:
@@ -86,7 +90,8 @@ class BufferType(Enum):
             return (4,)
         else:
             return (1,)
-        
+
+
 if __name__ == "__main__":
     buffer_type = BufferType.vec3
 

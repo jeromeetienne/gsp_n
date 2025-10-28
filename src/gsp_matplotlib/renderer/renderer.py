@@ -8,6 +8,8 @@ from gsp.core.camera import Camera
 from gsp.core.canvas import Canvas
 from gsp.core.viewport import Viewport
 from gsp.core.visual_base import VisualBase
+from gsp.types import Buffer
+from gsp.types.transbuf import TransBuf
 from gsp.visuals.points import Points
 
 
@@ -15,18 +17,33 @@ class MatplotlibRenderer:
 
     def __init__(self, canvas: Canvas):
         self.canvas = canvas
+        # Store mapping of viewport UUIDs to axes
         self._axes: dict[str, matplotlib.axes.Axes] = {}
+        # Store mapping of visual UUIDs to matplotlib artists
         self._artists: dict[str, matplotlib.artist.Artist] = {}
 
         # Create a figure of 512x512 pixels
         self._figure = matplotlib.pyplot.figure(figsize=(canvas.width / canvas.dpi, canvas.height / canvas.dpi), dpi=canvas.dpi)
 
-        # init all viewports
-        for viewport in self.canvas.viewports:
+
+    def render(self, viewports: list[Viewport], visuals: list[VisualBase], model_matrices: list[TransBuf], cameras: list[Camera]):
+
+        # =============================================================================
+        # Sanity checks
+        # =============================================================================
+
+        assert len(viewports) == len(visuals) == len(model_matrices) == len(cameras), f'All length MUST be equal. Mismatched lengths: {len(viewports)} viewports, {len(visuals)} visuals, {len(model_matrices)} model matrices, {len(cameras)} cameras'
+
+        # =============================================================================
+        # Create all the axes if needed
+        # =============================================================================
+        for viewport in viewports:
+            if viewport.uuid  in self._axes:
+                continue
             axes_rect = (viewport.x / self.canvas.width,
-                         viewport.y / self.canvas.height,
-                         viewport.width / self.canvas.width,
-                         viewport.height / self.canvas.height)
+                            viewport.y / self.canvas.height,
+                            viewport.width / self.canvas.width,
+                            viewport.height / self.canvas.height)
             axes: matplotlib.axes.Axes = matplotlib.pyplot.axes(axes_rect)
             # this should be -1 to 1 - from normalized device coordinates - https://en.wikipedia.org/wiki/Graphics_pipeline
             # - https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_model_view_projection
@@ -35,22 +52,21 @@ class MatplotlibRenderer:
             # store axes for this viewport
             self._axes[viewport.uuid] = axes
 
-    def render(self, viewports: list[Viewport], visuals: list[VisualBase], cameras: list[Camera]):
+        # =============================================================================
+        # Render each visual
+        # =============================================================================
 
-        # sanity check 
-        assert len(viewports) == len(visuals) == len(cameras), f'Mismatched lengths: {len(viewports)} viewports, {len(visuals)} visuals, {len(cameras)} cameras'
-
-        # loop over each viewport, visual, camera triplet to render them
-        for viewport, visual, camera in zip(viewports, visuals, cameras):
-            self._render_visual(viewport, visual, camera)
+        for viewport, visual, model_matrix, camera in zip(viewports, visuals, model_matrices, cameras):
+            self._render_visual(viewport, visual, model_matrix, camera)
 
 
-    def _render_visual(self, viewport: Viewport, visual: VisualBase, camera: Camera):
+    def _render_visual(self, viewport: Viewport, visual: VisualBase, model_matrix: TransBuf, camera: Camera):
         """ Render a single visual in a given viewport using the specified camera. """
+
         axes = self._axes[viewport.uuid]
         if isinstance(visual, Points):
             from gsp_matplotlib.renderer.renderer_points import RendererPoints
-            RendererPoints.render(self, axes, visual, camera)
+            RendererPoints.render(self, axes, visual, model_matrix, camera)
         else:
             raise NotImplementedError(f'Rendering for visual type {type(visual)} is not implemented.')
 

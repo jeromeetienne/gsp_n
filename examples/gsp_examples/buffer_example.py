@@ -1,5 +1,6 @@
 # local imports
 from gsp.types import Buffer, BufferType
+from gsp_extra.bufferx import Bufferx
 
 
 def main():

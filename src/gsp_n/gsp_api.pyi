@@ -16,6 +16,7 @@ class BufferType(Enum):
     vec3 = 6
     vec4 = 7
     rgba8 = 8
+    mat4 = 9
     # LATER: add more types for completeness
 
 class Constants:
@@ -41,15 +42,15 @@ class Buffer:
     @staticmethod
     def from_numpy(ndarray: numpy.ndarray) -> "Buffer": ...
 
-class Mat4:
-    """4x4 Matrix. Handle Model, View, Projection matrices."""
+# class Mat4:
+#     """4x4 Matrix. Handle Model, View, Projection matrices."""
 
-    def __init__(self, data: list[list[float]] | None = None) -> None: ...
-    """4x4 Matrix. if data is None, initializes to identity matrix."""
-    def get_data(self) -> list[list[float]]: ...
-    def set_data(self, data: list[list[float]]) -> None: ...
-    @staticmethod
-    def from_numpy(ndarray: numpy.ndarray) -> "Mat4": ...
+#     def __init__(self, data: list[list[float]] | None = None) -> None: ...
+#     """4x4 Matrix. if data is None, initializes to identity matrix."""
+#     def get_data(self) -> list[list[float]]: ...
+#     def set_data(self, data: list[list[float]]) -> None: ...
+#     @staticmethod
+#     def from_numpy(ndarray: numpy.ndarray) -> "Mat4": ...
 
 class DataSource:
     """Data source from which data can be loaded and **decoded**, e.g., image file path. .npy numpy files"""
