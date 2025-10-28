@@ -20,15 +20,31 @@ class Bufferx:
     def to_numpy(buffer: Buffer) -> np.ndarray:
         if buffer.get_type() == BufferType.float32:
             count = buffer.get_count()
-            return np.frombuffer(buffer.to_bytearray(), dtype=np.float32, count=count)
+            return np.frombuffer(buffer.to_bytearray(), dtype=np.float32).reshape((count, 1))
+        elif buffer.get_type() == BufferType.int8:
+            count = buffer.get_count()
+            return np.frombuffer(buffer.to_bytearray(), dtype=np.int8).reshape((count, 1))
+        elif buffer.get_type() == BufferType.int32:
+            count = buffer.get_count()
+            return np.frombuffer(buffer.to_bytearray(), dtype=np.int32).reshape((count, 1))
+        elif buffer.get_type() == BufferType.uint8:
+            count = buffer.get_count()
+            return np.frombuffer(buffer.to_bytearray(), dtype=np.uint8).reshape((count, 1))
         elif buffer.get_type() == BufferType.uint32:
             count = buffer.get_count()
-            return np.frombuffer(buffer.to_bytearray(), dtype=np.uint32, count=count)
+            return np.frombuffer(buffer.to_bytearray(), dtype=np.uint32).reshape((count, 1))
+        elif buffer.get_type() == BufferType.vec2:
+            count = buffer.get_count()
+            return np.frombuffer(buffer.to_bytearray(), dtype=np.float32).reshape((count, 2))
         elif buffer.get_type() == BufferType.vec3:
             count = buffer.get_count()
             return np.frombuffer(buffer.to_bytearray(), dtype=np.float32).reshape((count, 3))
+        elif buffer.get_type() == BufferType.vec4:
+            count = buffer.get_count()
+            return np.frombuffer(buffer.to_bytearray(), dtype=np.float32).reshape((count, 4))
         elif buffer.get_type() == BufferType.mat4:
-            return np.frombuffer(buffer.to_bytearray(), dtype=np.float32).reshape((4, 4))
+            count = buffer.get_count()
+            return np.frombuffer(buffer.to_bytearray(), dtype=np.float32).reshape((count, 4, 4))
         elif buffer.get_type() == BufferType.rgba8:
             count = buffer.get_count()
             return np.frombuffer(buffer.to_bytearray(), dtype=np.uint8).reshape((count, 4))
