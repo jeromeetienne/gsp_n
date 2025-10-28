@@ -21,9 +21,9 @@ class BufferType(Enum):
 class Constants:
     """Common constants like colors."""
 
-    red = BufferType.rgba8(0xFF0000FF)
-    green = BufferType.rgba8(0x00FF00FF)
-    blue = BufferType.rgba8(0x0000FFFF)
+    red = int(b'\xFF\x00\x00\xFF')
+    green = int(b'\x00\xFF\x00\xFF')
+    blue = int(b'\x00\x00\xFF\xFF')
 
 class Buffer:
     """typed array with single dimension
