@@ -15,10 +15,10 @@ from gsp_extra.visual_twin import VisualTwin
 
 def main():
     # Create a canvas
-    canvas = Canvas(100, 100, 96.0)
+    canvas = Canvas(512, 512, 96.0)
 
     # Create a viewport and add it to the canvas
-    viewport = Viewport(0, 0, 400, 300)
+    viewport = Viewport(0, 0, canvas.get_width(), canvas.get_height())
 
     # =============================================================================
     # Add random points

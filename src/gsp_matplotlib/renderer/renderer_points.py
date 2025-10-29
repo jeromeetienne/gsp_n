@@ -25,16 +25,6 @@ class RendererPoints:
         points: Points = visual
 
         # =============================================================================
-        # Create the artists if needed
-        # =============================================================================
-
-        if points.uuid not in renderer._artists:
-            mpl_path_collection = axes.scatter([], [])  # type: ignore
-            mpl_path_collection.set_visible(False)  # hide until properly positioned and sized
-            renderer._artists[points.uuid] = mpl_path_collection
-            axes.add_artist(mpl_path_collection)
-
-        # =============================================================================
         # Get existing artists
         # =============================================================================
 

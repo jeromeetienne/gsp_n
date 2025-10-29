@@ -25,16 +25,6 @@ class RendererPixels:
         pixels: Pixels = visual
 
         # =============================================================================
-        # Create the artists if needed
-        # =============================================================================
-
-        if pixels.uuid not in renderer._artists:
-            mpl_path_collection = axes.scatter([], [])  # type: ignore
-            mpl_path_collection.set_visible(False)  # hide until properly positioned and sized
-            renderer._artists[pixels.uuid] = mpl_path_collection
-            axes.add_artist(mpl_path_collection)
-
-        # =============================================================================
         # Get existing artists
         # =============================================================================
 
@@ -51,7 +41,18 @@ class RendererPixels:
         # =============================================================================
 
         if pixels.uuid not in renderer._artists:
-            mpl_path_collection = axes.scatter([], [])  # type: ignore
+            # Get DPI to compute pixel size
+            assert axes.figure.get_dpi() is not None, "Canvas DPI must be set for proper pixel sizing"
+            one_point_in_inches = 1.0 / 72.0
+            # Marker sizes in matplotlib are specified in "points squared" (pt²)
+            # - Squaring the ratio converts a linear scale (points) to an area scale (points squared).
+            size_point_squared = (one_point_in_inches * axes.figure.get_dpi()) ** 2
+            # hardcoded scale factor to get approximately 1 pixel size
+            size = 0.25 * size_point_squared
+
+            mpl_path_collection = axes.scatter([], [], s=size, marker="o")
+            mpl_path_collection.set_antialiased(True)
+            mpl_path_collection.set_linewidth(0)
             mpl_path_collection.set_visible(False)
             # hide until properly positioned and sized
             renderer._artists[pixels.uuid] = mpl_path_collection
