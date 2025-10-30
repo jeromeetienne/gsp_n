@@ -41,7 +41,7 @@ def main():
 
     # Create the Pixels visual and add it to the viewport
     pixels = Pixels(positions_buffer, colors_buffer, groups_buffer)
-    pixels_twin = VisualTwin(pixels)
+    model_matrix = Bufferx.mat4_identity()
 
     # =============================================================================
     # Render the canvas
@@ -55,7 +55,7 @@ def main():
 
     # Create a renderer and render the scene
     matplotlibRenderer = MatplotlibRenderer(canvas)
-    matplotlibRenderer.render([viewport], [pixels], [pixels_twin.model_matrix], [camera])
+    matplotlibRenderer.render([viewport], [pixels], [model_matrix], [camera])
 
     matplotlib.pyplot.show()
 
