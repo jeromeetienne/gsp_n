@@ -1,3 +1,6 @@
+# stdlib imports
+from typing import Sequence
+
 # pip imports
 import matplotlib.pyplot
 import matplotlib.axes
@@ -26,7 +29,7 @@ class MatplotlibRenderer:
         # Create a figure of 512x512 pixels
         self._figure = matplotlib.pyplot.figure(figsize=(canvas.width / canvas.dpi, canvas.height / canvas.dpi), dpi=canvas.dpi)
 
-    def render(self, viewports: list[Viewport], visuals: list[VisualBase], model_matrices: list[TransBuf], cameras: list[Camera]):
+    def render(self, viewports: Sequence[Viewport], visuals: Sequence[VisualBase], model_matrices: Sequence[TransBuf], cameras: Sequence[Camera]):
 
         # =============================================================================
         # Sanity checks
