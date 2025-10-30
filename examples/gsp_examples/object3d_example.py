@@ -15,6 +15,7 @@ from gsp.types import Buffer, BufferType
 from gsp.core import Camera
 from gsp_matplotlib.renderer import MatplotlibRenderer
 from gsp_extra.bufferx import Bufferx
+from gsp_extra.object3d import Object3D
 import gsp_extra.glm as glm
 
 
@@ -24,6 +25,9 @@ def main():
 
     # Create a viewport and add it to the canvas
     viewport = Viewport(0, 0, canvas.get_width(), canvas.get_height())
+    # canvas_half_width = canvas.get_width() // 2
+    # viewport_1 = Viewport(0, 0, canvas.get_width() // 2, canvas.get_height() // 2)
+    # viewport_2 = Viewport(canvas.get_width() // 2, canvas.get_height() // 2, canvas.get_width() // 2, canvas.get_height() // 2)
 
     # =============================================================================
     # Add random points
@@ -79,62 +83,61 @@ def main():
 
     # Create a renderer and render the scene
     matplotlibRenderer = MatplotlibRenderer(canvas)
-    matplotlibRenderer.render([viewport], [pixels], [model_matrix], [camera])
+    # matplotlibRenderer.render([viewport], [pixels], [model_matrix], [camera])
+
+    # =============================================================================
+    # Build the scene
+    # =============================================================================
+
+    object3d_scene = Object3D("Main Scene")
+
+    object3d_pixel = Object3D("Pixels Object3D")
+    object3d_pixel.attach_visual(pixels)
+    object3d_scene.add(object3d_pixel)
+
+    object3d_camera = Object3D("Camera Object3D")
+    object3d_camera.attach_camera(camera)
+    object3d_scene.add(object3d_camera)
+
+    # object3d_scene.render(matplotlibRenderer, viewport, object3d_scene, camera)
 
     # =============================================================================
     #
     # =============================================================================
 
-    # camera_world = np.eye(4, dtype=np.float32) @ glm.translate(np.array([0.0, 0.3, 0.0], dtype=np.float32))
-    camera_world = np.eye(4, dtype=np.float32) @ glm.translate(np.array([0.0, 0.0, 2.0], dtype=np.float32))
+    # camera_world = np.eye(4, dtype=np.float32) @ glm.translate(np.array([0.0, 0.0, 2.0], dtype=np.float32))
 
-    # projection_matrix_numpy = glm.perspective(45.0, canvas.get_width() / canvas.get_height(), 0.1, 100.0)
-    projection_matrix_numpy = glm.ortho(-1.0, 1.0, -1.0, 1.0, 0.1, 100.0)
-    projection_matrix_buffer = Bufferx.from_numpy(np.array([projection_matrix_numpy], dtype=np.float32), BufferType.mat4)
-    camera.set_projection_matrix(projection_matrix_buffer)
+    # # projection_matrix_numpy = glm.perspective(45.0, canvas.get_width() / canvas.get_height(), 0.1, 100.0)
+    # projection_matrix_numpy = glm.ortho(-1.0, 1.0, -1.0, 1.0, 0.1, 100.0)
+    # projection_matrix_buffer = Bufferx.from_numpy(np.array([projection_matrix_numpy], dtype=np.float32), BufferType.mat4)
+    # camera.set_projection_matrix(projection_matrix_buffer)
 
-    view_matrix_numpy = np.linalg.inv(camera_world)
-    view_matrix_buffer = Bufferx.from_numpy(np.array([view_matrix_numpy]), BufferType.mat4)
-    camera.set_view_matrix(view_matrix_buffer)
+    # view_matrix_numpy = np.linalg.inv(camera_world)
+    # view_matrix_buffer = Bufferx.from_numpy(np.array([view_matrix_numpy]), BufferType.mat4)
+    # camera.set_view_matrix(view_matrix_buffer)
 
     # =============================================================================
     # matplotlib animation
     # =============================================================================
-    # Create a matplotlib animation function
+
     def update(frame) -> Sequence[matplotlib.artist.Artist]:
-        angle = time.time() / np.pi * 180 * 2.0
-        scale_matrix = glm.scale(np.array([1.0, 1.0, 1.0], dtype=np.float32))
 
-        rotation_order = "XYZ"
-        model_angle_x = 0.0
-        model_angle_y = 0.0
-        model_angle_z = angle
-        # compute the rotation matrix in the specified order
-        rotation_matrix = np.eye(4, dtype=np.float32)
-        for axis in rotation_order:
-            if axis == "X":
-                rotation_matrix = rotation_matrix @ glm.xrotate(model_angle_x)
-            elif axis == "Y":
-                rotation_matrix = rotation_matrix @ glm.yrotate(model_angle_y)
-            elif axis == "Z":
-                rotation_matrix = rotation_matrix @ glm.zrotate(model_angle_z)
+        # Rotate parent object
+        object3d_pixel.euler[2] = -time.time() % (2.0 * np.pi)
+        # object3d_pixel.scale[:] = 0.8 + 0.5 * np.sin(time.time())
+        # object3d_pixel.position[0] = 0.8 * np.cos(time.time() * 3.0)
 
-        model_position_x = 0.0
-        model_position_y = 0.0
-        model_position_z = np.sin(time.time()) * 0.5 - 5.0
-        translation_matrix = glm.translate(np.array([model_position_x, model_position_y, model_position_z], dtype=np.float32))
+        # Change camera position
+        # camera_radius = 0.8
+        # object3d_camera.position[0] = camera_radius * np.cos(time.time())
+        # object3d_camera.position[1] = camera_radius * np.sin(time.time())
 
-        model_matrix_numpy = scale_matrix @ rotation_matrix @ translation_matrix
-
-        # model_matrix_numpy = glm.zrotate(model_angle_z)
-        model_matrix.set_data(bytearray(np.array([model_matrix_numpy], dtype=np.float32).tobytes()), 0, 1)
-
-        matplotlibRenderer.render([viewport], [pixels], [model_matrix], [camera])
+        object3d_scene.render(matplotlibRenderer, viewport, object3d_scene, camera)
 
         modified_artists = list(matplotlibRenderer._artists.values())
         return modified_artists
 
-    ani = matplotlib.animation.FuncAnimation(matplotlibRenderer._figure, update, frames=180, interval=50)
+    funcAnimation = matplotlib.animation.FuncAnimation(matplotlibRenderer._figure, update, frames=180, interval=50)
 
     matplotlib.pyplot.show()
 

@@ -39,10 +39,31 @@ def main():
     # Random positions - Create buffer from numpy array
     positions_numpy = np.zeros((point_count, 3), dtype=np.float32)
 
-    # Make a line from -0.9 to 0.9 in x
-    positions_numpy[:, 0] = np.linspace(-0.5, 0.5, point_count)
-    positions_numpy[:, 1] = 0.0
-    positions_numpy[:, 2] = -5.0
+    if False:
+        # Make a line from -0.9 to 0.9 in x
+        positions_numpy[:, 0] = np.linspace(-0.5, 0.5, point_count)
+        positions_numpy[:, 1] = 0.0
+        positions_numpy[:, 2] = -5.0
+    elif True:
+        # Make a 3d cube of points - only the edges - 10 points per edge
+        edge_points = []
+        cube_size = 0.3
+        points_per_edge = 10
+        for x in [-cube_size, cube_size]:
+            for y in [-cube_size, cube_size]:
+                for z in np.linspace(-cube_size, cube_size, points_per_edge):
+                    edge_points.append([x, y, z])
+        for x in [-cube_size, cube_size]:
+            for z in [-cube_size, cube_size]:
+                for y in np.linspace(-cube_size, cube_size, points_per_edge):
+                    edge_points.append([x, y, z])
+        for y in [-cube_size, cube_size]:
+            for z in [-cube_size, cube_size]:
+                for x in np.linspace(-cube_size, cube_size, points_per_edge):
+                    edge_points.append([x, y, z])
+        positions_numpy = np.array(edge_points, dtype=np.float32)
+    else:
+        assert False, "Unknown position setup"
 
     positions_buffer = Bufferx.from_numpy(positions_numpy, BufferType.vec3)
 
@@ -126,8 +147,10 @@ def main():
     def update(frame) -> Sequence[matplotlib.artist.Artist]:
 
         # Rotate parent object
-        object3d_pixel.euler[2] = -time.time() % (2.0 * np.pi)
-        # object3d_pixel.scale[:] = 0.8 + 0.5 * np.sin(time.time())
+        object3d_pixel.euler[0] = -time.time() % (1.0 * np.pi)
+        object3d_pixel.euler[1] = -time.time() % (2.0 * np.pi)
+        object3d_pixel.euler[2] = -time.time() % (3.0 * np.pi)
+        object3d_pixel.scale[:] = 0.8 + 0.5 * np.sin(time.time())
         # object3d_pixel.position[0] = 0.8 * np.cos(time.time() * 3.0)
 
         # Change camera position

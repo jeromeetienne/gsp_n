@@ -1,21 +1,15 @@
 # pip imports
 import numpy as np
 import matplotlib.pyplot
-import matplotlib.animation
-import matplotlib.artist
-import typing
-from typing import Sequence
-import time
 
 
 # local imports
-from gsp.core import Canvas, Viewport, VisualBase
+from gsp.core import Canvas, Viewport
 from gsp.visuals import Points
 from gsp.types import Buffer, BufferType
 from gsp.core import Camera
 from gsp_matplotlib.renderer import MatplotlibRenderer
 from gsp_extra.bufferx import Bufferx
-from gsp_extra.visual_twin import VisualTwin
 import gsp_extra.glm as glm
 
 

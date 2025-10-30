@@ -15,9 +15,9 @@ class Buffer:
 
     def __init__(self, count: int, buffer_type: BufferType) -> None:
         item_size = BufferType.get_item_size(buffer_type)
-        self._count = count
-        self._type = buffer_type
-        self._bytearray = bytearray(count * item_size)
+        self._count: int = count
+        self._type: BufferType = buffer_type
+        self._bytearray: bytearray = bytearray(count * item_size)
 
     def __repr__(self) -> str:
         return f"Buffer(count={self._count}, type={self._type})"

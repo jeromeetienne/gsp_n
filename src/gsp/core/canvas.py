@@ -1,18 +1,17 @@
-# pip imports
-import uuid
+# stdlib imports
+from typing import Any
 
 # local imports
-from .viewport import Viewport
 from .uuid_utils import UuidUtils
 
 
 class Canvas:
     def __init__(self, width: int, height: int, dpi: float):
-        self.uuid = UuidUtils.generate_uuid()
-        self.width = width
-        self.height = height
-        self.dpi = dpi
-        self.userData = {}
+        self.uuid: str = UuidUtils.generate_uuid()
+        self.width: int = width
+        self.height: int = height
+        self.dpi: float = dpi
+        self.userData: dict[str, Any] = {}
 
     def get_width(self) -> int:
         return self.width

@@ -1,5 +1,5 @@
 from .buffer import Buffer
-from ..transforms.transform import Transform
+from ..transforms.transform_chain import TransformChain
 
 
-TransBuf = Buffer | Transform
+TransBuf = Buffer | TransformChain

@@ -5,6 +5,6 @@ from .types.buffer_type import BufferType
 class Constants:
     """Common constants like colors."""
 
-    # red = int(b"\xff\x00\x00\xff")
-    # green = int(b"\x00\xff\x00\xff")
-    # blue = int(b"\x00\x00\xff\xff")
+    red = bytearray([255, 0, 0, 255])
+    green = bytearray([0, 255, 0, 255])
+    blue = bytearray([0, 0, 255, 255])

@@ -6,6 +6,6 @@ class Pixels(VisualBase):
     def __init__(self, positions: TransBuf, colors: TransBuf, groups: TransBuf):
         super().__init__()
 
-        self.positions = positions
-        self.colors = colors
-        self.groups = groups
+        self.positions: TransBuf = positions
+        self.colors: TransBuf = colors
+        self.groups: TransBuf = groups

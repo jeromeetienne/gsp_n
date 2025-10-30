@@ -1,6 +1,6 @@
+- generate or write a .pyi files for the new classes
 - DONE implement Pixels
 - DONE write a simple example using Pixels
-- generate or write a .pyi files for the new classes
 - support math operations
   - make the pixels rotate
 - find a way to generate the .pyi files automatically

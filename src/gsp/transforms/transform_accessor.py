@@ -3,10 +3,11 @@ from typing import Literal
 
 # local imports
 from ..types import BufferType, Buffer
-from .transform import TransformLink
+from .transform_chain import TransformLink
 
 
-TransformAccessorFieldName = Literal['r','g','b','a','x','y','z','w']
+TransformAccessorFieldName = Literal["r", "g", "b", "a", "x", "y", "z", "w"]
+
 
 class TransformAccessor(TransformLink):
     """Access a subset of the input Buffer."""
@@ -16,10 +17,7 @@ class TransformAccessor(TransformLink):
 
     def apply(self, buffer: Buffer) -> Buffer:
         # Map field names to indices
-        field_to_index = {
-            'r': 0, 'g': 1, 'b': 2, 'a': 3,
-            'x': 0, 'y': 1, 'z': 2, 'w': 3
-        }
+        field_to_index = {"r": 0, "g": 1, "b": 2, "a": 3, "x": 0, "y": 1, "z": 2, "w": 3}
         index = field_to_index[self._field_name]
         item_size = BufferType.get_item_size(buffer.get_type())
 
