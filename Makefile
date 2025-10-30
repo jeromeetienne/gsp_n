@@ -13,7 +13,10 @@ pytest_verbose: ## Run pytest in verbose mode on the tests/ directory
 ##############################################################################
 
 lint: ## Run pyright type checker on src and examples
-	pyright ./src/gsp/ ./examples/gsp_examples/
+	pyright ./src/gsp/ ./src/gsp_matplotlib/ ./examples/gsp_examples/
 
 test: lint pytest_verbose ## Run all tests
 	@echo "All tests passed!"
+
+generate_stub: ## Generate type stubs for src/gsp
+	stubgen -p gsp -o ./stubs/
