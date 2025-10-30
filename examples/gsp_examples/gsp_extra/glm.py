@@ -299,8 +299,8 @@ def fit(vertices):
         (np.ndarray): vertices contained in the normalize cube
     """
 
-    vmin = vertices.min(axis=0)
-    vmax = vertices.max(axis=0)
+    Vmin = vertices.min(axis=0)
+    Vmax = vertices.max(axis=0)
     # return 2*(vertices-vmin) / max(vmax-vmin)-1
     V = 2 * (vertices - Vmin) / max(Vmax - Vmin) - 1
     return V - (V.min(axis=0) + V.max(axis=0)) / 2
@@ -349,7 +349,7 @@ def center(vertices):
 
     vmin = vertices.min(axis=0)
     vmax = vertices.max(axis=0)
-    return V - (vmax + vmin) / 2
+    return vertices - (vmax + vmin) / 2
 
 
 def xrotate(theta=0, dtype=np.float32, transpose=False):
