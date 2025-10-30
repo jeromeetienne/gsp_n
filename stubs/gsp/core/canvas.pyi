@@ -1,0 +1,13 @@
+from .uuid_utils import UuidUtils as UuidUtils
+from typing import Any
+
+class Canvas:
+    uuid: str
+    width: int
+    height: int
+    dpi: float
+    userData: dict[str, Any]
+    def __init__(self, width: int, height: int, dpi: float) -> None: ...
+    def get_width(self) -> int: ...
+    def get_height(self) -> int: ...
+    def get_dpi(self) -> float: ...
