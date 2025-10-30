@@ -5,40 +5,6 @@
 import numpy as np
 
 
-def mesh(filename):
-    """
-    Read a wavefront filename and returns vertices, texcoords and
-    respective indices for faces and texcoords
-    """
-
-    V, T, N, Vi, Ti, Ni = [], [], [], [], [], []
-    with open(filename) as f:
-        for line in f.readlines():
-            if line.startswith("#"):
-                continue
-            values = line.split()
-            if not values:
-                continue
-            if values[0] == "v":
-                V.append([float(x) for x in values[1:4]])
-            elif values[0] == "vt":
-                T.append([float(x) for x in values[1:3]])
-            elif values[0] == "vn":
-                N.append([float(x) for x in values[1:4]])
-            elif values[0] == "f":
-                Vi.append([int(indices.split("/")[0]) for indices in values[1:]])
-                try:
-                    Ti.append([int(indices.split("/")[1]) for indices in values[1:]])
-                except:
-                    pass
-                try:
-                    Ni.append([int(indices.split("/")[2]) for indices in values[1:]])
-                except:
-                    pass
-
-    return fit(np.array(V)), np.array(Vi) - 1
-
-
 def normalize(V):
     """Normalize V"""
 
