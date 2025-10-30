@@ -538,8 +538,10 @@ def camera(xrotation: float = 25.0, yrotation: float = 45.0, zoom: float = 1.0, 
     xrotation = min(max(xrotation, 0), 90)
     yrotation = min(max(yrotation, 0), 90)
     zoom = max(0.1, zoom)
-    model = scale(zoom, zoom, zoom) @ xrotate(xrotation) @ yrotate(yrotation)
-    view = translate(0, 0, -4.5)
+    scale_vector = np.array([zoom, zoom, zoom], dtype=np.float32)
+    model = scale(scale_vector) @ xrotate(xrotation) @ yrotate(yrotation)
+    translate_vector = np.array([0, 0, -4.5], dtype=np.float32)
+    view = translate(translate_vector)
     if mode == "ortho":
         proj = ortho(-1, +1, -1, +1, 1, 100)
     elif mode == "perspective":
