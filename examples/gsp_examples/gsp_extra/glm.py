@@ -250,7 +250,7 @@ def lookat(eye=(0, 0, 4.5), center=(0, 0, 0), up=(0, 0, 1), dtype: np.dtype = np
     return np.array([[X[0], X[1], X[2], -np.dot(X, eye)], [Y[0], Y[1], Y[2], -np.dot(Y, eye)], [Z[0], Z[1], Z[2], -np.dot(Z, eye)], [0, 0, 0, 1]], dtype=dtype)
 
 
-def scale(scale, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def scale(scale: np.ndarray, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """Non-uniform scaling along the x, y, and z axes
 
     Args:
@@ -513,7 +513,7 @@ def align(U: np.ndarray, V: np.ndarray, dtype: np.dtype = np.dtype(np.float32), 
         return R
 
 
-def frontback(T: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def frontback(triangles: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """
     Sort front and back facing triangles
 
@@ -527,9 +527,9 @@ def frontback(T: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     front and back facing triangles as (n1,3) and (n2,3) arrays (n1+n2=n)
     """
     Z = (
-        (T[:, 1, 0] - T[:, 0, 0]) * (T[:, 1, 1] + T[:, 0, 1])
-        + (T[:, 2, 0] - T[:, 1, 0]) * (T[:, 2, 1] + T[:, 1, 1])
-        + (T[:, 0, 0] - T[:, 2, 0]) * (T[:, 0, 1] + T[:, 2, 1])
+        (triangles[:, 1, 0] - triangles[:, 0, 0]) * (triangles[:, 1, 1] + triangles[:, 0, 1])
+        + (triangles[:, 2, 0] - triangles[:, 1, 0]) * (triangles[:, 2, 1] + triangles[:, 1, 1])
+        + (triangles[:, 0, 0] - triangles[:, 2, 0]) * (triangles[:, 0, 1] + triangles[:, 2, 1])
     )
     return Z < 0, Z >= 0
 
