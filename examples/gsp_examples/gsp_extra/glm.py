@@ -3,21 +3,22 @@
 # Copyright 2023 Nicolas P. Rougier - BSD 2 Clauses licence
 # -----------------------------------------------------------------------------
 import numpy as np
+from typing import Literal
 
 
-def normalize(V):
+def normalize(V: np.ndarray) -> np.ndarray:
     """Normalize V"""
 
     return V / (1e-16 + np.sqrt((np.array(V) ** 2).sum(axis=-1)))[..., np.newaxis]
 
 
-def clamp(V, vmin=0, vmax=1):
+def clamp(V: np.ndarray, vmin: float = 0, vmax: float = 1) -> np.ndarray:
     """Clamp V between vmin and vmax"""
 
     return np.minimum(np.maximum(V, vmin), vmax)
 
 
-def viewport(x, y, w, h, d, dtype=np.float32, transpose=False):
+def viewport(x: int, y: int, w: int, h: int, d: float, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """Viewport matrix
 
     Args:
@@ -48,14 +49,31 @@ def viewport(x, y, w, h, d, dtype=np.float32, transpose=False):
         Viewport matrix
     """
 
-    M = np.array([[w / 2, 0, 0, x + w / 2], [0, h / 2, 0, y + h / 2], [0, 0, d / 2, d / 2], [0, 0, 0, 1]], dtype=dtype)
+    M = np.array(
+        [
+            [w / 2, 0, 0, x + w / 2],
+            [0, h / 2, 0, y + h / 2],
+            [0, 0, d / 2, d / 2],
+            [0, 0, 0, 1],
+        ],
+        dtype=dtype,
+    )
     if transpose:
         return np.transpose(M)
     else:
         return M
 
 
-def frustum(left, right, bottom, top, znear, zfar, dtype=np.float32, transpose=False):
+def frustum(
+    left: float,
+    right: float,
+    bottom: float,
+    top: float,
+    znear: float,
+    zfar: float,
+    dtype: np.dtype = np.dtype(np.float32),
+    transpose: bool = False,
+) -> np.ndarray:
     r"""View frustum matrix
 
     Args:
@@ -105,7 +123,14 @@ def frustum(left, right, bottom, top, znear, zfar, dtype=np.float32, transpose=F
         return M
 
 
-def perspective(fovy, aspect, znear, zfar, dtype=np.float32, transpose=False):
+def perspective(
+    fovy: float,
+    aspect: float,
+    znear: float,
+    zfar: float,
+    dtype: np.dtype = np.dtype(np.float32),
+    transpose: bool = False,
+) -> np.ndarray:
     """Perspective projection matrix
 
     Args:
@@ -138,7 +163,7 @@ def perspective(fovy, aspect, znear, zfar, dtype=np.float32, transpose=False):
     return frustum(-w, w, -h, h, znear, zfar, dtype, transpose)
 
 
-def ortho(left, right, bottom, top, znear, zfar, dtype=np.float32, transpose=False):
+def ortho(left, right, bottom, top, znear, zfar, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """Create orthographic projection matrix
 
     Args:
@@ -187,7 +212,7 @@ def ortho(left, right, bottom, top, znear, zfar, dtype=np.float32, transpose=Fal
         return M
 
 
-def lookat(eye=(0, 0, 4.5), center=(0, 0, 0), up=(0, 0, 1), dtype=np.float32, transpose=False):
+def lookat(eye=(0, 0, 4.5), center=(0, 0, 0), up=(0, 0, 1), dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """
     Creates a viewing matrix derived from an eye point, a reference
     point indicating the center of the scene, and an up vector.
@@ -225,7 +250,7 @@ def lookat(eye=(0, 0, 4.5), center=(0, 0, 0), up=(0, 0, 1), dtype=np.float32, tr
     return np.array([[X[0], X[1], X[2], -np.dot(X, eye)], [Y[0], Y[1], Y[2], -np.dot(Y, eye)], [Z[0], Z[1], Z[2], -np.dot(Z, eye)], [0, 0, 0, 1]], dtype=dtype)
 
 
-def scale(scale, dtype=np.float32, transpose=False):
+def scale(scale, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """Non-uniform scaling along the x, y, and z axes
 
     Args:
@@ -253,7 +278,7 @@ def scale(scale, dtype=np.float32, transpose=False):
         return S
 
 
-def fit(vertices):
+def fit(vertices: np.ndarray) -> np.ndarray:
     """Fit vertices to the normalized cube
 
     Args:
@@ -272,7 +297,7 @@ def fit(vertices):
     return V - (V.min(axis=0) + V.max(axis=0)) / 2
 
 
-def translate(translate, dtype=np.float32, transpose=False):
+def translate(translate: np.ndarray, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """
     Translation by a given vector
 
@@ -301,7 +326,7 @@ def translate(translate, dtype=np.float32, transpose=False):
         return T
 
 
-def center(vertices):
+def center(vertices: np.ndarray) -> np.ndarray:
     """Center vertices around the origin.
 
     Args:
@@ -318,7 +343,7 @@ def center(vertices):
     return vertices - (vmax + vmin) / 2
 
 
-def xrotate(theta=0, dtype=np.float32, transpose=False):
+def xrotate(theta: float = 0.0, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """Rotation about the X axis
 
     Args:
@@ -347,7 +372,7 @@ def xrotate(theta=0, dtype=np.float32, transpose=False):
         return R
 
 
-def yrotate(theta=0, dtype=np.float32, transpose=False):
+def yrotate(theta: float = 0.0, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """Rotation about the Y axis
 
     Args:
@@ -376,7 +401,7 @@ def yrotate(theta=0, dtype=np.float32, transpose=False):
         return R
 
 
-def zrotate(theta=0, dtype=np.float32, transpose=False):
+def zrotate(theta: float = 0.0, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """Rotation about the Z axis
 
     Args:
@@ -405,7 +430,7 @@ def zrotate(theta=0, dtype=np.float32, transpose=False):
         return R
 
 
-def rotate(theta, axis, dtype=np.float32, transpose=False):
+def rotate(theta: float, axis: np.ndarray, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """Rotation about an arbitrary X axis
 
     Args:
@@ -450,7 +475,7 @@ def rotate(theta, axis, dtype=np.float32, transpose=False):
         return R
 
 
-def align(U, V, dtype=np.float32, transpose=False):
+def align(U: np.ndarray, V: np.ndarray, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
     """
     Return the rotation matrix that aligns U to V
 
@@ -488,7 +513,7 @@ def align(U, V, dtype=np.float32, transpose=False):
         return R
 
 
-def frontback(T):
+def frontback(T: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """
     Sort front and back facing triangles
 
@@ -509,7 +534,7 @@ def frontback(T):
     return Z < 0, Z >= 0
 
 
-def camera(xrotation=25, yrotation=45, zoom=1, mode="perspective"):
+def camera(xrotation: float = 25.0, yrotation: float = 45.0, zoom: float = 1.0, mode: Literal["perspective", "ortho"] = "perspective") -> np.ndarray:
     xrotation = min(max(xrotation, 0), 90)
     yrotation = min(max(yrotation, 0), 90)
     zoom = max(0.1, zoom)
@@ -517,6 +542,8 @@ def camera(xrotation=25, yrotation=45, zoom=1, mode="perspective"):
     view = translate(0, 0, -4.5)
     if mode == "ortho":
         proj = ortho(-1, +1, -1, +1, 1, 100)
-    else:
+    elif mode == "perspective":
         proj = perspective(25, 1, 1, 100)
+    else:
+        raise ValueError("Unknown camera mode: " + mode)
     return proj @ view @ model
