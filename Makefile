@@ -18,5 +18,5 @@ lint: ## Run pyright type checker on src and examples
 test: lint pytest_verbose ## Run all tests
 	@echo "All tests passed!"
 
-generate_stub: ## Generate type stubs for src/gsp
+stubs_gsp: ## Generate type stubs for src/gsp
 	stubgen -p gsp -o ./stubs/
