@@ -5,6 +5,9 @@
 import numpy as np
 from typing import Literal
 
+# TODO remove the transpose argument and always return non-transposed matrices
+# there a np.transpose or .T where needed
+
 
 def normalize(V: np.ndarray) -> np.ndarray:
     """Normalize V"""
@@ -18,7 +21,7 @@ def clamp(V: np.ndarray, vmin: float = 0, vmax: float = 1) -> np.ndarray:
     return np.minimum(np.maximum(V, vmin), vmax)
 
 
-def viewport(x: int, y: int, w: int, h: int, d: float, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def viewport(x: int, y: int, w: int, h: int, d: float, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
     """Viewport matrix
 
     Args:
@@ -58,10 +61,7 @@ def viewport(x: int, y: int, w: int, h: int, d: float, dtype: np.dtype = np.dtyp
         ],
         dtype=dtype,
     )
-    if transpose:
-        return np.transpose(M)
-    else:
-        return M
+    return M
 
 
 def frustum(
@@ -163,7 +163,7 @@ def perspective(
     return frustum(-w, w, -h, h, znear, zfar, dtype, transpose)
 
 
-def ortho(left, right, bottom, top, znear, zfar, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def ortho(left, right, bottom, top, znear, zfar, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
     """Create orthographic projection matrix
 
     Args:
@@ -206,13 +206,10 @@ def ortho(left, right, bottom, top, znear, zfar, dtype: np.dtype = np.dtype(np.f
     M[1, 3] = -(top + bottom) / float(top - bottom)
     M[2, 3] = -(zfar + znear) / float(zfar - znear)
 
-    if transpose:
-        return np.transpose(M)
-    else:
-        return M
+    return M
 
 
-def lookat(eye=(0, 0, 4.5), center=(0, 0, 0), up=(0, 0, 1), dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def lookat(eye=(0, 0, 4.5), center=(0, 0, 0), up=(0, 0, 1), dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
     """
     Creates a viewing matrix derived from an eye point, a reference
     point indicating the center of the scene, and an up vector.
@@ -250,7 +247,7 @@ def lookat(eye=(0, 0, 4.5), center=(0, 0, 0), up=(0, 0, 1), dtype: np.dtype = np
     return np.array([[X[0], X[1], X[2], -np.dot(X, eye)], [Y[0], Y[1], Y[2], -np.dot(Y, eye)], [Z[0], Z[1], Z[2], -np.dot(Z, eye)], [0, 0, 0, 1]], dtype=dtype)
 
 
-def scale(scale: np.ndarray, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def scale(scale: np.ndarray, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
     """Non-uniform scaling along the x, y, and z axes
 
     Args:
@@ -270,12 +267,17 @@ def scale(scale: np.ndarray, dtype: np.dtype = np.dtype(np.float32), transpose: 
     """
 
     x, y, z = np.array(scale)
-    S = np.array([[x, 0, 0, 0], [0, y, 0, 0], [0, 0, z, 0], [0, 0, 0, 1]], dtype=dtype)
+    S = np.array(
+        [
+            [x, 0, 0, 0],
+            [0, y, 0, 0],
+            [0, 0, z, 0],
+            [0, 0, 0, 1],
+        ],
+        dtype=dtype,
+    )
 
-    if transpose:
-        return np.transpose(S)
-    else:
-        return S
+    return S
 
 
 def fit(vertices: np.ndarray) -> np.ndarray:
@@ -297,7 +299,7 @@ def fit(vertices: np.ndarray) -> np.ndarray:
     return V - (V.min(axis=0) + V.max(axis=0)) / 2
 
 
-def translate(translate: np.ndarray, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def translate(translate: np.ndarray, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
     """
     Translation by a given vector
 
@@ -320,10 +322,7 @@ def translate(translate: np.ndarray, dtype: np.dtype = np.dtype(np.float32), tra
     x, y, z = np.array(translate)
     T = np.array([[1, 0, 0, x], [0, 1, 0, y], [0, 0, 1, z], [0, 0, 0, 1]], dtype=dtype)
 
-    if transpose:
-        return np.transpose(T)
-    else:
-        return T
+    return T
 
 
 def center(vertices: np.ndarray) -> np.ndarray:
@@ -343,12 +342,12 @@ def center(vertices: np.ndarray) -> np.ndarray:
     return vertices - (vmax + vmin) / 2
 
 
-def xrotate(theta: float = 0.0, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def xrotate(angle_x: float = 0.0, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
     """Rotation about the X axis
 
     Args:
 
-        theta (float):
+        angle_x (float):
             Specifies the angle of rotation, in degrees.
 
         dtype (np.dtype):
@@ -362,22 +361,19 @@ def xrotate(theta: float = 0.0, dtype: np.dtype = np.dtype(np.float32), transpos
         Rotation matrix
     """
 
-    t = np.radians(theta)
+    t = np.radians(angle_x)
     c, s = np.cos(t), np.sin(t)
     R = np.array([[1, 0, 0, 0], [0, c, -s, 0], [0, s, c, 0], [0, 0, 0, 1]], dtype=dtype)
 
-    if transpose:
-        return np.transpose(R)
-    else:
-        return R
+    return R
 
 
-def yrotate(theta: float = 0.0, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def yrotate(angle_y: float = 0.0, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
     """Rotation about the Y axis
 
     Args:
 
-        theta (float):
+        angle_y (float):
             Specifies the angle of rotation, in degrees.
 
         dtype (np.dtype):
@@ -391,22 +387,19 @@ def yrotate(theta: float = 0.0, dtype: np.dtype = np.dtype(np.float32), transpos
         Rotation matrix
     """
 
-    t = np.radians(theta)
+    t = np.radians(angle_y)
     c, s = np.cos(t), np.sin(t)
     R = np.array([[c, 0, s, 0], [0, 1, 0, 0], [-s, 0, c, 0], [0, 0, 0, 1]], dtype=dtype)
 
-    if transpose:
-        return np.transpose(R)
-    else:
-        return R
+    return R
 
 
-def zrotate(theta: float = 0.0, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def zrotate(angle_z: float = 0.0, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
     """Rotation about the Z axis
 
     Args:
 
-        theta (float):
+        angle_z (float):
             Specifies the angle of rotation, in degrees.
 
         dtype (np.dtype):
@@ -420,22 +413,19 @@ def zrotate(theta: float = 0.0, dtype: np.dtype = np.dtype(np.float32), transpos
         Rotation matrix
     """
 
-    t = np.radians(theta)
+    t = np.radians(angle_z)
     c, s = np.cos(t), np.sin(t)
     R = np.array([[c, -s, 0, 0], [s, c, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], dtype=dtype)
 
-    if transpose:
-        return np.transpose(R)
-    else:
-        return R
+    return R
 
 
-def rotate(theta: float, axis: np.ndarray, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
-    """Rotation about an arbitrary X axis
+def rotate(angle: float, axis: np.ndarray, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
+    """Rotation around an arbitrary axis of angle
 
     Args:
 
-        theta (float):
+        angle (float):
             Specifies the angle of rotation, in degrees.
 
         axis (vec3):
@@ -452,7 +442,7 @@ def rotate(theta: float, axis: np.ndarray, dtype: np.dtype = np.dtype(np.float32
         Rotation matrix
     """
 
-    t = np.radians(theta)
+    t = np.radians(angle)
 
     axis = normalize(np.array(axis))
     a = np.cos(t / 2)
@@ -469,13 +459,10 @@ def rotate(theta: float, axis: np.ndarray, dtype: np.dtype = np.dtype(np.float32
         dtype=dtype,
     )
 
-    if transpose:
-        return np.transpose(R)
-    else:
-        return R
+    return R
 
 
-def align(U: np.ndarray, V: np.ndarray, dtype: np.dtype = np.dtype(np.float32), transpose: bool = False) -> np.ndarray:
+def align(U: np.ndarray, V: np.ndarray, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
     """
     Return the rotation matrix that aligns U to V
 
@@ -507,10 +494,7 @@ def align(U: np.ndarray, V: np.ndarray, dtype: np.dtype = np.dtype(np.float32), 
     R[:3, :3] = np.eye(3) + K + K @ K * ((1 - c) / (s**2))
     R[3, 3] = 1
 
-    if transpose:
-        return np.transpose(R)
-    else:
-        return R
+    return R
 
 
 def frontback(triangles: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
