@@ -15,16 +15,16 @@ from gsp_extra.visual_twin import VisualTwin
 
 def main():
     # Create a canvas
-    canvas = Canvas(100, 100, 96.0)
+    canvas = Canvas(100, 100, 72.0)
 
     # Create a viewport and add it to the canvas
-    viewport = Viewport(0, 0, 400, 300)
+    viewport = Viewport(0, 0, canvas.get_width(), canvas.get_height())
 
     # =============================================================================
     # Add random points
     # - various ways to create Buffers
     # =============================================================================
-    point_count = 1024
+    point_count = 100
     group_count = 1
 
     # Random positions - Create buffer from numpy array
@@ -32,7 +32,7 @@ def main():
     positions_buffer = Bufferx.from_numpy(positions_numpy, BufferType.vec3)
 
     # Sizes - Create buffer and set data with numpy array
-    sizes_numpy = np.array([10] * group_count, dtype=np.float32)
+    sizes_numpy = np.array([40] * group_count, dtype=np.float32)
     sizes_buffer = Bufferx.from_numpy(sizes_numpy, BufferType.float32)
 
     # all pixels red - Create buffer and fill it with a constant
@@ -44,8 +44,8 @@ def main():
     edge_colors_buffer.set_data(bytearray(b"\x00\xff\x00\xff") * edge_colors_buffer.get_count(), 0, 1)
 
     # Edge widths - Create buffer and fill it with a constant
-    edge_widths_buffer = Buffer(group_count, BufferType.uint32)
-    edge_widths_buffer.set_data(bytearray(np.array([1] * group_count, dtype=np.uint32).tobytes()), 0, 1)
+    edge_widths_buffer = Buffer(group_count, BufferType.float32)
+    edge_widths_buffer.set_data(bytearray(np.array([0.5 * 72.0 / canvas.get_dpi()] * group_count, dtype=np.float32).tobytes()), 0, 1)
 
     # one group for all points - create buffer and set value with immediate assignment
     groups_buffer = Buffer(1, BufferType.uint32)
@@ -62,7 +62,7 @@ def main():
     # Create a camera
     view_matrix = Bufferx.mat4_identity()
     projection_matrix = Buffer(1, BufferType.mat4)
-    projection_matrix.set_data(bytearray(np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, -0.1], [0, 0, -1, 0]], dtype=np.float32).tobytes()), 0, 1)
+    projection_matrix.set_data(bytearray(np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], dtype=np.float32).tobytes()), 0, 1)
     camera = Camera(view_matrix, projection_matrix)
 
     # Create a renderer and render the scene
