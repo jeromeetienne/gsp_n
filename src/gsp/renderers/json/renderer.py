@@ -3,7 +3,7 @@ from gsp.core.camera import Camera
 from gsp.core.canvas import Canvas
 from gsp.core.viewport import Viewport
 from gsp.core.visual_base import VisualBase
-import gsp.renderer.json.gsp_messages_pydantic as gsp_messages
+import gsp.renderers.json.gsp_messages_pydantic as gsp_messages
 from gsp.visuals.points import Points
 
 
