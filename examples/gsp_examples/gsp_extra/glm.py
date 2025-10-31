@@ -41,9 +41,6 @@ def viewport(x: int, y: int, w: int, h: int, d: float, dtype: np.dtype = np.dtyp
         dtype (np.dtype):
             dtype of the resulting array
 
-        transpose (bool):
-            Whether to transpose result
-
     Returns:
 
         Viewport matrix
@@ -69,7 +66,6 @@ def frustum(
     znear: float,
     zfar: float,
     dtype: np.dtype = np.dtype(np.float32),
-    transpose: bool = False,
 ) -> np.ndarray:
     r"""View frustum matrix
 
@@ -96,10 +92,6 @@ def frustum(
         dtype (numpy dtype):
             dtype of the resulting array
 
-        transpose (boolean):
-            Whether to transpose result
-
-
     Returns:
 
         View frustum matrix
@@ -114,10 +106,7 @@ def frustum(
     M[2, 3] = -2.0 * znear * zfar / (zfar - znear)
     M[3, 2] = -1.0
 
-    if transpose:
-        return np.transpose(M)
-    else:
-        return M
+    return M
 
 
 def perspective(
@@ -126,7 +115,6 @@ def perspective(
     znear: float,
     zfar: float,
     dtype: np.dtype = np.dtype(np.float32),
-    transpose: bool = False,
 ) -> np.ndarray:
     """Perspective projection matrix
 
@@ -147,9 +135,6 @@ def perspective(
         dtype (np.dtype):
             dtype of the resulting array
 
-        transpose (bool):
-            Whether to transpose result
-
     Returns:
 
         Perspective projection matrix
@@ -157,7 +142,7 @@ def perspective(
 
     h = np.tan(0.5 * np.radians(fovy)) * znear
     w = h * aspect
-    return frustum(-w, w, -h, h, znear, zfar, dtype, transpose)
+    return frustum(-w, w, -h, h, znear, zfar, dtype)
 
 
 def ortho(left, right, bottom, top, znear, zfar, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarray:
@@ -185,9 +170,6 @@ def ortho(left, right, bottom, top, znear, zfar, dtype: np.dtype = np.dtype(np.f
 
         dtype (np.dtype):
             dtype of the resulting array
-
-        transpose (boolean):
-            Whether to transpose result
 
     Returns:
 
@@ -225,9 +207,6 @@ def lookat(eye=(0, 0, 4.5), center=(0, 0, 0), up=(0, 0, 1), dtype: np.dtype = np
         dtype (np.dtype):
             dtype of the resulting array
 
-        transpose (boolean):
-            Whether to transpose result
-
     Returns:
 
         View matrix
@@ -254,9 +233,6 @@ def scale(scale: np.ndarray, dtype: np.dtype = np.dtype(np.float32)) -> np.ndarr
 
         dtype (np dtype):
             dtype of the resulting array
-
-        transpose (bool):
-            Whether to transpose result
 
     Returns:
 
@@ -308,9 +284,6 @@ def translate(translate: np.ndarray, dtype: np.dtype = np.dtype(np.float32)) -> 
         dtype (np dtype):
             dtype of the resulting array
 
-        transpose (bool):
-            Whether to transpose result
-
     Returns:
 
         Translation matrix
@@ -350,9 +323,6 @@ def xrotate(angle_x: float = 0.0, dtype: np.dtype = np.dtype(np.float32)) -> np.
         dtype (np.dtype):
             dtype of the resulting array
 
-        transpose (bool):
-            Whether to transpose result
-
     Returns:
 
         Rotation matrix
@@ -376,9 +346,6 @@ def yrotate(angle_y: float = 0.0, dtype: np.dtype = np.dtype(np.float32)) -> np.
         dtype (np.dtype):
             dtype of the resulting array
 
-        transpose (bool):
-            Whether to transpose result
-
     Returns:
 
         Rotation matrix
@@ -401,9 +368,6 @@ def zrotate(angle_z: float = 0.0, dtype: np.dtype = np.dtype(np.float32)) -> np.
 
         dtype (np.dtype):
             dtype of the resulting array
-
-        transpose (bool):
-            Whether to transpose result
 
     Returns:
 
@@ -430,9 +394,6 @@ def rotate(angle: float, axis: np.ndarray, dtype: np.dtype = np.dtype(np.float32
 
         dtype (np.dtype):
             dtype of the resulting array
-
-        transpose (bool):
-            Whether to transpose result
 
     Returns:
 
@@ -473,9 +434,6 @@ def align(U: np.ndarray, V: np.ndarray, dtype: np.dtype = np.dtype(np.float32)) 
 
         dtype (np.dtype):
             dtype of the resulting array
-
-        transpose (bool):
-            Whether to transpose result
 
     Returns:
 
