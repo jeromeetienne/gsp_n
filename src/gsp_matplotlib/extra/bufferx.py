@@ -3,6 +3,8 @@ import numpy as np
 
 
 class Bufferx:
+    """Utility class for Buffer extended functionality using numpy."""
+
     # =============================================================================
     # Matrix functions
     # =============================================================================

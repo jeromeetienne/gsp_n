@@ -5,9 +5,6 @@
 import numpy as np
 from typing import Literal
 
-# TODO remove the transpose argument and always return non-transposed matrices
-# there a np.transpose or .T where needed
-
 
 def normalize(V: np.ndarray) -> np.ndarray:
     """Normalize V"""
