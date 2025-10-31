@@ -1,31 +1,28 @@
 from enum import Enum
 from typing import Literal, NewType, Union, overload, Any
 
-
-
-class BufferType():
+class BufferType:
     """Type of elements in a Buffer. Heavily inspired by GLSL types."""
 
-    float32 = NewType('float32', float)
-    uint8 = NewType('uint8', int)
-    uint16 = NewType('uint16', int)
-    uint32 = NewType('uint32', int)
-    int8 = NewType('int8', int)
-    int16 = NewType('int16', int)
-    int32 = NewType('int32', int)
-    rgba8 = NewType('rgba8', int)
-    vec2 = NewType('vec2', tuple[float, float])
-    vec3 = NewType('vec3', tuple[float, float, float])
-    vec4 = NewType('vec4', tuple[float, float, float, float])
-    mat4 = NewType('mat4', list[list[float]])  # 16 floats
+    float32 = NewType("float32", float)
+    uint8 = NewType("uint8", int)
+    uint16 = NewType("uint16", int)
+    uint32 = NewType("uint32", int)
+    int8 = NewType("int8", int)
+    int16 = NewType("int16", int)
+    int32 = NewType("int32", int)
+    rgba8 = NewType("rgba8", int)
+    vec2 = NewType("vec2", tuple[float, float])
+    vec3 = NewType("vec3", tuple[float, float, float])
+    vec4 = NewType("vec4", tuple[float, float, float, float])
+    mat4 = NewType("mat4", list[list[float]])  # 16 floats
 
 class Constants:
     """Common constants like colors."""
 
-    red = BufferType.rgba8(int.from_bytes(bytearray([255, 0, 0, 255]), byteorder='big'))
-    green = BufferType.rgba8(int.from_bytes(bytearray([0, 255, 0, 255]), byteorder='big'))
-    blue = BufferType.rgba8(int.from_bytes(bytearray([0, 0, 255, 255]), byteorder='big'))
-
+    red = BufferType.rgba8(int.from_bytes(bytearray([255, 0, 0, 255]), byteorder="little"))
+    green = BufferType.rgba8(int.from_bytes(bytearray([0, 255, 0, 255]), byteorder="big"))
+    blue = BufferType.rgba8(int.from_bytes(bytearray([0, 0, 255, 255]), byteorder="big"))
 
 class Buffer:
     """typed array with single dimension
@@ -97,10 +94,11 @@ class Viewport:
 
 class Visual:
     """Base class for visual elements like Pixels, Images, etc."""
+
     def __init__(self) -> None: ...
 
 class Pixels(Visual):
-    def __init__( self, positions: TransBuf, colors: TransBuf, groups: TransBuf ) -> None: ...
+    def __init__(self, positions: TransBuf, colors: TransBuf, groups: TransBuf) -> None: ...
     """Visual element representing pixels.
     
     Arguments:

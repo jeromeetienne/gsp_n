@@ -24,16 +24,19 @@ def main():
     # Add random points
     # - various ways to create Buffers
     # =============================================================================
-    point_count = 1024
-    group_count = 1
+    point_count = 3000
+    group_count = 2
+    assert point_count % group_count == 0, "Point count must be divisible by group count"
 
     # Random positions - Create buffer from numpy array
-    positions_numpy = np.random.rand(point_count, 3).astype(np.float32) * 2.0 - 1
+    positions_numpy_1 = np.random.rand(point_count // 2, 3).astype(np.float32) * +1.0
+    positions_numpy_2 = np.random.rand(point_count // 2, 3).astype(np.float32) * -1.0
+    positions_numpy = np.vstack((positions_numpy_1, positions_numpy_2))
     positions_buffer = Bufferx.from_numpy(positions_numpy, BufferType.vec3)
 
     # all pixels red - Create buffer and fill it with a constant
     colors_buffer = Buffer(group_count, BufferType.rgba8)
-    colors_buffer.set_data(bytearray([255, 0, 0, 255]) * colors_buffer.get_count(), 0, 1)
+    colors_buffer.set_data(bytearray([255, 0, 0, 255]) + bytearray([0, 255, 0, 255]), 0, 2)
 
     # one group for all points - create buffer and set value with immediate assignment
     groups_buffer = Buffer(1, BufferType.uint32)

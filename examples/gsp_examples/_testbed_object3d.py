@@ -85,7 +85,7 @@ def main():
 
     # one group for all points - create buffer and set value with immediate assignment
     groups_buffer = Buffer(1, BufferType.uint32)
-    groups_buffer.set_data(bytearray((group_count).to_bytes(4, byteorder="big")), 0, 1)
+    groups_buffer.set_data(bytearray((group_count).to_bytes(4, byteorder="little")), 0, 1)
 
     # Create the Points visual and add it to the viewport
     pixels = Points(positions_buffer, sizes_buffer, face_colors_buffer, edge_colors_buffer, edge_widths_buffer, groups_buffer)

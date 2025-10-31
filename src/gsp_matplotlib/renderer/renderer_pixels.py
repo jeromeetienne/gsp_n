@@ -28,13 +28,38 @@ class RendererPixels:
         # Get existing artists
         # =============================================================================
 
-        positions_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.positions))
+        vertices_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.positions))
         # sanity check
-        assert positions_numpy.shape[1] == 3, "Positions must have shape (N, 3)"
+        assert vertices_numpy.shape[1] == 3, "Positions must have shape (N, 3)"
         # TODO
-        positions_2d = positions_numpy[:, :2]  # drop z-coordinate for 2D rendering
+        vertices_2d = vertices_numpy[:, :2]  # drop z-coordinate for 2D rendering
 
         colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.colors)) / 255.0  # normalize to [0, 1] range
+
+        # =============================================================================
+        #
+        # =============================================================================
+
+        # FIXMEshould not be a transbuf due to the polymorphic nature
+        # int | list[int] | list[list[int]]
+        groups_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.groups))
+
+        if groups_numpy.shape == (1, 1):
+            # In this case, groups buffer contains only the number of groups
+            # indices per groups = [list of vertex indices for each group]
+            # if group_count = 2, split the vertices in two halves
+            # if group_count = 3, split the vertices in three thirds, etc.
+            group_count = groups_numpy[0][0]
+
+            indices_per_group = [[] for _ in range(group_count)]
+
+            for vertex_index in range(vertices_numpy.shape[0]):
+                group_index = vertex_index * group_count // vertices_numpy.shape[0]
+                indices_per_group[group_index].append(vertex_index)
+
+            # breakpoint()
+        else:
+            raise NotImplementedError(f"Group buffer shape not supported: {groups_numpy.shape}")
 
         # =============================================================================
         # Create the artists if needed
@@ -43,6 +68,7 @@ class RendererPixels:
         if pixels.uuid not in renderer._artists:
             # Get DPI to compute pixel size
             assert axes.figure.get_dpi() is not None, "Canvas DPI must be set for proper pixel sizing"
+            # TODO move that into a unit_helper module - to help with unit conversions
             one_point_in_inches = 1.0 / 72.0
             # Marker sizes in matplotlib are specified in "points squared" (pt²)
             # - Squaring the ratio converts a linear scale (points) to an area scale (points squared).
@@ -50,27 +76,35 @@ class RendererPixels:
             # hardcoded scale factor to get approximately 1 pixel size
             size = 0.25 * size_point_squared
 
-            mpl_path_collection = axes.scatter([], [], s=size, marker="o")
-            mpl_path_collection.set_antialiased(True)
-            mpl_path_collection.set_linewidth(0)
-            mpl_path_collection.set_visible(False)
-            # hide until properly positioned and sized
-            renderer._artists[pixels.uuid] = mpl_path_collection
-            axes.add_artist(mpl_path_collection)
+            for group_index in range(group_count):
+                mpl_path_collection = axes.scatter([], [], s=size, marker="o")
+                mpl_path_collection.set_antialiased(True)
+                mpl_path_collection.set_linewidth(0)
+                mpl_path_collection.set_visible(False)
+                # hide until properly positioned and sized
+                group_uuid = f"{pixels.uuid}_group_{group_index}"
+                renderer._artists[group_uuid] = mpl_path_collection
+                axes.add_artist(mpl_path_collection)
 
         # =============================================================================
-        # Get existing artists
+        # Update backend for each group
         # =============================================================================
 
-        mpl_path_collection = typing.cast(matplotlib.collections.PathCollection, renderer._artists[pixels.uuid])
-        mpl_path_collection.set_visible(True)
+        for group_index in range(group_count):
+            group_uuid = f"{pixels.uuid}_group_{group_index}"
+            # =============================================================================
+            # Get existing artists
+            # =============================================================================
 
-        # =============================================================================
-        # Update artists
-        # =============================================================================
+            mpl_path_collection = typing.cast(matplotlib.collections.PathCollection, renderer._artists[group_uuid])
+            mpl_path_collection.set_visible(True)
 
-        mpl_path_collection.set_offsets(offsets=positions_2d)
-        mpl_path_collection.set_facecolor(typing.cast(list, colors_numpy))
+            # =============================================================================
+            # Update artists
+            # =============================================================================
+
+            mpl_path_collection.set_offsets(offsets=vertices_2d[indices_per_group[group_index]])
+            mpl_path_collection.set_facecolor(typing.cast(list, colors_numpy[group_index]))
 
         # Return the list of artists created/updated
         return [mpl_path_collection]
