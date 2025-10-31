@@ -38,12 +38,8 @@ def main():
     colors_buffer = Buffer(group_count, BufferType.rgba8)
     colors_buffer.set_data(bytearray([255, 0, 0, 255]) + bytearray([0, 255, 0, 255]), 0, 2)
 
-    # one group for all points - create buffer and set value with immediate assignment
-    groups_buffer = Buffer(1, BufferType.uint32)
-    groups_buffer.set_data(bytearray((group_count).to_bytes(4, byteorder="little")), 0, 1)
-
     # Create the Pixels visual and add it to the viewport
-    pixels = Pixels(positions_buffer, colors_buffer, groups_buffer)
+    pixels = Pixels(positions_buffer, colors_buffer, group_count)
     model_matrix = Bufferx.mat4_identity()
 
     # =============================================================================

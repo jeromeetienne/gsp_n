@@ -37,29 +37,24 @@ class RendererPixels:
         colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.colors)) / 255.0  # normalize to [0, 1] range
 
         # =============================================================================
-        #
+        #   Compute indices_per_group for groups depending on the type of groups
         # =============================================================================
 
-        # FIXMEshould not be a transbuf due to the polymorphic nature
-        # int | list[int] | list[list[int]]
-        groups_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.groups))
-
-        if groups_numpy.shape == (1, 1):
+        groups = pixels.groups
+        if isinstance(groups, int):
             # In this case, groups buffer contains only the number of groups
             # indices per groups = [list of vertex indices for each group]
             # if group_count = 2, split the vertices in two halves
             # if group_count = 3, split the vertices in three thirds, etc.
-            group_count = groups_numpy[0][0]
+            group_count = groups
 
+            # Create the indices per group for this case
             indices_per_group = [[] for _ in range(group_count)]
-
             for vertex_index in range(vertices_numpy.shape[0]):
                 group_index = vertex_index * group_count // vertices_numpy.shape[0]
                 indices_per_group[group_index].append(vertex_index)
-
-            # breakpoint()
         else:
-            raise NotImplementedError(f"Group buffer shape not supported: {groups_numpy.shape}")
+            raise NotImplementedError(f"Group buffer shape not supported: {type(groups)}")
 
         # =============================================================================
         # Create the artists if needed

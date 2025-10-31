@@ -62,12 +62,8 @@ def main():
     edge_widths_buffer = Buffer(group_count, BufferType.float32)
     edge_widths_buffer.set_data(bytearray(np.array([0.5 * 72.0 / canvas.get_dpi()] * group_count, dtype=np.float32).tobytes()), 0, 1)
 
-    # one group for all points - create buffer and set value with immediate assignment
-    groups_buffer = Buffer(1, BufferType.uint32)
-    groups_buffer.set_data(bytearray((group_count).to_bytes(4, byteorder="little")), 0, 1)
-
     # Create the Points visual and add it to the viewport
-    pixels = Points(positions_buffer, sizes_buffer, face_colors_buffer, edge_colors_buffer, edge_widths_buffer, groups_buffer)
+    pixels = Points(positions_buffer, sizes_buffer, face_colors_buffer, edge_colors_buffer, edge_widths_buffer, group_count)
 
     model_matrix = Bufferx.mat4_identity()
 
