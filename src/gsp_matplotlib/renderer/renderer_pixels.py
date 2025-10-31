@@ -82,17 +82,20 @@ class RendererPixels:
                 axes.add_artist(mpl_path_collection)
 
         # =============================================================================
-        # Update backend for each group
+        # Update matplotlib for each group
         # =============================================================================
 
+        changed_artists: list[matplotlib.artist.Artist] = []
         for group_index in range(group_count):
             group_uuid = f"{pixels.uuid}_group_{group_index}"
+
             # =============================================================================
             # Get existing artists
             # =============================================================================
 
             mpl_path_collection = typing.cast(matplotlib.collections.PathCollection, renderer._artists[group_uuid])
             mpl_path_collection.set_visible(True)
+            changed_artists.append(mpl_path_collection)
 
             # =============================================================================
             # Update artists
@@ -102,4 +105,4 @@ class RendererPixels:
             mpl_path_collection.set_facecolor(typing.cast(list, colors_numpy[group_index]))
 
         # Return the list of artists created/updated
-        return [mpl_path_collection]
+        return changed_artists
