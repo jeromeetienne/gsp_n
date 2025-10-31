@@ -10,7 +10,6 @@ from gsp.types import Buffer, BufferType
 from gsp.core import Camera
 from gsp_matplotlib.renderer import MatplotlibRenderer
 from gsp_extra.bufferx import Bufferx
-from gsp_extra.visual_twin import VisualTwin
 
 
 def main():

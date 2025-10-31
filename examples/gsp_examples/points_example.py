@@ -11,7 +11,6 @@ from gsp.types import Buffer, BufferType
 from gsp.core import Camera
 from gsp_matplotlib.renderer import MatplotlibRenderer
 from gsp_extra.bufferx import Bufferx
-from gsp_extra.visual_twin import VisualTwin
 
 
 def main():
@@ -49,8 +48,8 @@ def main():
     edge_widths_buffer.set_data(bytearray(np.array([0.5 * 72.0 / canvas.get_dpi()] * group_count, dtype=np.float32).tobytes()), 0, 1)
 
     # Create the Points visual and add it to the viewport
-    pixels = Points(positions_buffer, sizes_buffer, face_colors_buffer, edge_colors_buffer, edge_widths_buffer, group_count)
-    pixels_twin = VisualTwin(pixels)
+    points = Points(positions_buffer, sizes_buffer, face_colors_buffer, edge_colors_buffer, edge_widths_buffer, group_count)
+    model_matrix = Bufferx.mat4_identity()
 
     # =============================================================================
     # Render the canvas
@@ -64,7 +63,7 @@ def main():
 
     # Create a renderer and render the scene
     matplotlibRenderer = MatplotlibRenderer(canvas)
-    matplotlibRenderer.render([viewport], [pixels], [pixels_twin.model_matrix], [camera])
+    matplotlibRenderer.render([viewport], [points], [model_matrix], [camera])
 
     matplotlib.pyplot.show()
 

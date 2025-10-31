@@ -10,7 +10,7 @@ from gsp.types import Buffer, BufferType
 from gsp.core import Camera
 from gsp_matplotlib.renderer import MatplotlibRenderer
 from gsp_extra.bufferx import Bufferx
-from gsp_extra.visual_twin import VisualTwin
+from gsp.constants import Constants
 
 
 def main():
@@ -36,7 +36,7 @@ def main():
 
     # all pixels red - Create buffer and fill it with a constant
     colors_buffer = Buffer(group_count, BufferType.rgba8)
-    colors_buffer.set_data(bytearray([255, 0, 0, 255]) + bytearray([0, 255, 0, 255]), 0, 2)
+    colors_buffer.set_data(Constants.red + Constants.green, 0, 2)
 
     # Create the Pixels visual and add it to the viewport
     pixels = Pixels(positions_buffer, colors_buffer, group_count)
