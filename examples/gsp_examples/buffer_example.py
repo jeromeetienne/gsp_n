@@ -1,6 +1,5 @@
 # local imports
 from gsp.types import Buffer, BufferType
-from gsp_extra.bufferx import Bufferx
 
 
 def main():
@@ -8,7 +7,7 @@ def main():
     print("Buffer created:", buffer)
 
     # Set data
-    buffer.set_data(bytearray(b'\x00\x00\x00\x22' * 2), 0, 2)
+    buffer.set_data(bytearray(b"\x00\x00\x00\x22" * 2), 0, 2)
     print("Buffer data set.")
 
     # Get data
