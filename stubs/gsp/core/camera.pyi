@@ -1,5 +1,5 @@
 from ..types.transbuf import TransBuf as TransBuf
-from ..utils.uuid_utils import UuidUtils as UuidUtils
+wfrom ..utils.uuid_utils import UuidUtils as UuidUtils
 from typing import Any
 
 class Camera:
