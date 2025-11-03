@@ -1,6 +1,10 @@
-- make the math transformations in pixels and points
 - make the groups in pixels and points
+- find examples to test the groups
 - make groups computation in core with common functions
+- make the 3d transformations in pixels and points
+- make transform chain
+  - download
+  - make one user space
 - the attributes check system for all visual
   - should be done in the renderer too (post transformation)
   - static .sanity_check_attributes()

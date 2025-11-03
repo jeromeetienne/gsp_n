@@ -30,12 +30,12 @@ class RendererPoints:
         # Get existing artists
         # =============================================================================
 
-        vertices_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(points.positions))
+        vertices_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.positions))
 
         # Compute the Model-View-Projection (MVP) matrix
-        model_matrix_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(model_matrix)).squeeze()
-        view_matrix_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(camera.get_view_matrix())).squeeze()
-        projection_matrix_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(camera.get_projection_matrix())).squeeze()
+        model_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(model_matrix)).squeeze()
+        view_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(camera.get_view_matrix())).squeeze()
+        projection_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(camera.get_projection_matrix())).squeeze()
         mvp_matrix_numpy = projection_matrix_numpy @ view_matrix_numpy @ model_matrix_numpy
 
         # convert vertices to homogeneous coordinates (x, y, z) -> (x, y, z, w=1.0)
@@ -59,10 +59,10 @@ class RendererPoints:
         # Convert all attributes to numpy arrays
         # =============================================================================
 
-        sizes_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(points.sizes))
-        face_colors_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(points.face_colors)) / 255.0  # normalize to [0, 1] range
-        edge_colors_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(points.edge_colors)) / 255.0  # normalize to [0, 1] range
-        edge_widths_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(points.edge_widths)).flatten()
+        sizes_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.sizes))
+        face_colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.face_colors)) / 255.0  # normalize to [0, 1] range
+        edge_colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.edge_colors)) / 255.0  # normalize to [0, 1] range
+        edge_widths_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.edge_widths)).flatten()
 
         # =============================================================================
         # Create the artists if needed

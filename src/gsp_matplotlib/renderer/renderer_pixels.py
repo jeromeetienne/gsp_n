@@ -29,13 +29,13 @@ class RendererPixels:
         # Get existing artists
         # =============================================================================
 
-        vertices_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(pixels._positions))
+        vertices_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels._positions))
         # sanity check
         assert vertices_numpy.shape[1] == 3, "Positions must have shape (N, 3)"
         # TODO
         vertices_2d = vertices_numpy[:, :2]  # drop z-coordinate for 2D rendering
 
-        colors_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(pixels._colors)) / 255.0  # normalize to [0, 1] range
+        colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels._colors)) / 255.0  # normalize to [0, 1] range
 
         # =============================================================================
         #   Compute indices_per_group for groups depending on the type of groups

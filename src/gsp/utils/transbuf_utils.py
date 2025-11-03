@@ -11,7 +11,7 @@ from ..types.buffer import Buffer
 
 class TransBufUtils:
     @staticmethod
-    def transbuf_to_buffer(trans_buf: TransBuf) -> Buffer:
+    def to_buffer(trans_buf: TransBuf) -> Buffer:
         """Convert a TransBuf to a Buffer."""
         if isinstance(trans_buf, Buffer):
             buffer = typing.cast(Buffer, trans_buf)
