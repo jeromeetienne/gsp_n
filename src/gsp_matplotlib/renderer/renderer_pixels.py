@@ -6,9 +6,9 @@ import matplotlib.artist
 
 # local imports
 from gsp.core.camera import Camera
-from gsp.types.group_utils import GroupUtils
+from gsp.utils.group_utils import GroupUtils
 from gsp.visuals.pixels import Pixels
-from gsp.types.transbuf_utils import TransBufUtils
+from gsp.utils.transbuf_utils import TransBufUtils
 from gsp.types.transbuf import TransBuf
 from .renderer import MatplotlibRenderer
 from ..extra.bufferx import Bufferx

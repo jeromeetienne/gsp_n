@@ -8,7 +8,7 @@ import numpy as np
 # local imports
 from gsp.core.camera import Camera
 from gsp.visuals.points import Points
-from gsp.types.transbuf_utils import TransBufUtils
+from gsp.utils.transbuf_utils import TransBufUtils
 from gsp.types.transbuf import TransBuf
 from gsp.types.buffer_type import BufferType
 from .renderer import MatplotlibRenderer

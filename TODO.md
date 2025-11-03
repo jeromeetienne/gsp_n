@@ -1,4 +1,3 @@
-- generate or write a .pyi files for the new classes
 - make the math transformations in pixels and points
 - make the groups in pixels and points
 - make groups computation in core with common functions
@@ -7,6 +6,7 @@
   - static .sanity_check_attributes()
   - non static .check_attributes()
   - non static .set_attributes()
+- generate or write a .pyi files for the new classes
 
 ---
 

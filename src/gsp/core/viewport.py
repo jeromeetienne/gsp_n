@@ -2,7 +2,7 @@
 from typing import Any
 
 # local imports
-from .uuid_utils import UuidUtils
+from ..utils.uuid_utils import UuidUtils
 
 
 class Viewport:

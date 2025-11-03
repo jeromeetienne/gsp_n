@@ -2,7 +2,6 @@
 import numpy as np
 import matplotlib.pyplot
 
-
 # local imports
 from gsp.core import Canvas, Viewport
 from gsp.visuals import Points

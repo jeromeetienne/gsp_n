@@ -3,7 +3,7 @@ from typing import Any
 
 # local imports
 from ..types.transbuf import TransBuf
-from .uuid_utils import UuidUtils
+from ..utils.uuid_utils import UuidUtils
 
 
 class Camera:

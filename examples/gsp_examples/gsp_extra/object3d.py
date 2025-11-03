@@ -12,7 +12,7 @@ from . import glm
 from gsp.core import Canvas, Viewport, VisualBase
 from gsp_matplotlib.renderer import MatplotlibRenderer
 from gsp.types import Buffer, BufferType
-from gsp.core.uuid_utils import UuidUtils
+from gsp.utils.uuid_utils import UuidUtils
 
 
 class Object3D:

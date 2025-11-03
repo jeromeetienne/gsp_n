@@ -2,7 +2,7 @@
 import numpy as np
 
 # local imports
-from .group import Groups
+from ..types.group import Groups
 
 
 class GroupUtils:
