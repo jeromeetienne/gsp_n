@@ -7,9 +7,9 @@ import requests
 import imageio.v3
 
 # local imports
-from ..types.buffer import Buffer
-from ..types.buffer_type import BufferType
-from .transform_chain import TransformLink
+from ...types.buffer import Buffer
+from ...types.buffer_type import BufferType
+from ..transform_link import TransformLink
 
 
 class TransformDataSource(TransformLink):

@@ -6,6 +6,7 @@ import matplotlib.artist
 
 # local imports
 from gsp.core.camera import Camera
+from gsp.types.group_utils import GroupUtils
 from gsp.visuals.pixels import Pixels
 from gsp.types.transbuf_utils import TransBufUtils
 from gsp.types.transbuf import TransBuf
@@ -28,33 +29,19 @@ class RendererPixels:
         # Get existing artists
         # =============================================================================
 
-        vertices_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.positions))
+        vertices_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(pixels._positions))
         # sanity check
         assert vertices_numpy.shape[1] == 3, "Positions must have shape (N, 3)"
         # TODO
         vertices_2d = vertices_numpy[:, :2]  # drop z-coordinate for 2D rendering
 
-        colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.colors)) / 255.0  # normalize to [0, 1] range
+        colors_numpy = Bufferx.to_numpy(TransBufUtils.transbuf_to_buffer(pixels._colors)) / 255.0  # normalize to [0, 1] range
 
         # =============================================================================
         #   Compute indices_per_group for groups depending on the type of groups
         # =============================================================================
 
-        groups = pixels.groups
-        if isinstance(groups, int):
-            # In this case, groups buffer contains only the number of groups
-            # indices per groups = [list of vertex indices for each group]
-            # if group_count = 2, split the vertices in two halves
-            # if group_count = 3, split the vertices in three thirds, etc.
-            group_count = groups
-
-            # Create the indices per group for this case
-            indices_per_group = [[] for _ in range(group_count)]
-            for vertex_index in range(vertices_numpy.shape[0]):
-                group_index = vertex_index * group_count // vertices_numpy.shape[0]
-                indices_per_group[group_index].append(vertex_index)
-        else:
-            raise NotImplementedError(f"Group buffer shape not supported: {type(groups)}")
+        group_count, indices_per_group = GroupUtils.compute_indices_per_group(vertices_numpy, pixels._groups)
 
         # =============================================================================
         # Create the artists if needed

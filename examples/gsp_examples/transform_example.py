@@ -4,8 +4,8 @@ import os
 # local imports
 from gsp.types.buffer import Buffer, BufferType
 from gsp.transforms.transform_chain import TransformChain
-from gsp.transforms.transform_data_source import TransformDataSource
-from gsp.transforms.transform_accessor import TransformAccessor
+from gsp.transforms.links.transform_data_source import TransformDataSource
+from gsp.transforms.links.transform_accessor import TransformAccessor
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))

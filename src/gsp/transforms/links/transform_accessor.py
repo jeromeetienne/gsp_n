@@ -2,8 +2,8 @@
 from typing import Literal
 
 # local imports
-from ..types import BufferType, Buffer
-from .transform_chain import TransformLink
+from ...types import BufferType, Buffer
+from ..transform_link import TransformLink
 
 
 TransformAccessorFieldName = Literal["r", "g", "b", "a", "x", "y", "z", "w"]
