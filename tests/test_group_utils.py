@@ -30,18 +30,20 @@ class TestGroupAsInt:
         expected_group_count = 3
         expected_indices_per_group = [[0, 1], [2, 3], [4, 5]]
 
-        group_count, indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        group_count = len(indices_per_group)
 
         assert group_count == expected_group_count, f"group_count mismatch. Expected {expected_group_count}, got {group_count}"
         assert indices_per_group == expected_indices_per_group, f"indices_per_group mismatch. Expected {expected_indices_per_group}, got {indices_per_group}"
 
     def test_group_as_int_non_divisible(self):
         vertex_count = 7
-        groups = 3
-        expected_group_count = 3
+        groups = 4
+        expected_group_count = 4
         expected_indices_per_group = [[0, 1], [2, 3], [4, 5], [6]]
 
-        group_count, indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        group_count = len(indices_per_group)
 
         assert group_count == expected_group_count, f"group_count mismatch. Expected {expected_group_count}, got {group_count}"
         assert indices_per_group == expected_indices_per_group, f"indices_per_group mismatch. Expected {expected_indices_per_group}, got {indices_per_group}"
@@ -54,7 +56,8 @@ class TestGroupAsListInt:
         expected_group_count = 3
         expected_indices_per_group = [[0], [1, 2, 3], [4, 5]]
 
-        group_count, indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        group_count = len(indices_per_group)
 
         assert group_count == expected_group_count, f"group_count mismatch. Expected {expected_group_count}, got {group_count}"
         assert indices_per_group == expected_indices_per_group, f"indices_per_group mismatch. Expected {expected_indices_per_group}, got {indices_per_group}"
@@ -67,7 +70,8 @@ class TestGroupAsListListInt:
         expected_group_count = 3
         expected_indices_per_group = [[0], [1, 2, 3], [4, 5]]
 
-        group_count, indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        group_count = len(indices_per_group)
 
         assert group_count == expected_group_count, f"group_count mismatch. Expected {expected_group_count}, got {group_count}"
         assert indices_per_group == expected_indices_per_group, f"indices_per_group mismatch. Expected {expected_indices_per_group}, got {indices_per_group}"
@@ -78,7 +82,8 @@ class TestGroupAsListListInt:
         expected_group_count = 3
         expected_indices_per_group = [[0, 2], [1, 3, 5], [4]]
 
-        group_count, indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        indices_per_group = GroupUtils.compute_indices_per_group(vertex_count, groups)
+        group_count = len(indices_per_group)
 
         assert group_count == expected_group_count, f"group_count mismatch. Expected {expected_group_count}, got {group_count}"
         assert indices_per_group == expected_indices_per_group, f"indices_per_group mismatch. Expected {expected_indices_per_group}, got {indices_per_group}"

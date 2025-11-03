@@ -120,7 +120,7 @@ class GroupUtils:
     # .compute_indices_per_group
     # =============================================================================
     @staticmethod
-    def compute_indices_per_group(vertex_count: int, groups: Groups) -> tuple[int, list[list[int]]]:
+    def compute_indices_per_group(vertex_count: int, groups: Groups) -> list[list[int]]:
         """Compute indices_per_group for groups depending on the type of groups
 
         Returns:
@@ -134,37 +134,34 @@ class GroupUtils:
         groups_format = GroupUtils._groups_format(groups)
         if groups_format == GroupUtils.FORMAT_INT:
             groups_typed = typing.cast(int, groups)
-            group_count, indices_per_group = GroupUtils._compute_indices_per_group_int(vertex_count, groups_typed)
+            indices_per_group = GroupUtils._compute_indices_per_group_int(vertex_count, groups_typed)
         elif groups_format == GroupUtils.FORMAT_LIST_INT:
             groups_typed = typing.cast(list[int], groups)
-            group_count, indices_per_group = GroupUtils._compute_indices_per_group_list_int(vertex_count, groups_typed)
+            indices_per_group = GroupUtils._compute_indices_per_group_list_int(vertex_count, groups_typed)
         elif groups_format == GroupUtils.FORMAT_LIST_LIST_INT:
             groups_typed = typing.cast(list[list[int]], groups)
-            group_count, indices_per_group = GroupUtils._compute_indices_per_group_list_list_int(vertex_count, groups_typed)
+            indices_per_group = GroupUtils._compute_indices_per_group_list_list_int(vertex_count, groups_typed)
         else:
             raise NotImplementedError(f"Group buffer shape not supported: {type(groups)}")
 
-        return group_count, indices_per_group
+        return indices_per_group
 
     # =============================================================================
     # ._compute_indices_per_group_*() for each format
     # =============================================================================
 
     @staticmethod
-    def _compute_indices_per_group_int(vertex_count: int, groups: int) -> tuple[int, list[list[int]]]:
+    def _compute_indices_per_group_int(vertex_count: int, groups: int) -> list[list[int]]:
         """Compute indices_per_group for groups as int.
         The int represents the number of groups.
-
 
         group_count = groups
         indices_per_group = list[list[int]]
 
         Examples:
         - vertex_count = 6, groups = 3 - divisible - all groups are vertex_count // groups long
-          - group_count = 3
           - indices_per_group = [[0, 1], [2, 3], [4, 5]]
-        - vertex_count = 7, groups = 3 - non divisible - all groups are vertex_count // groups long, except the last group takes the remainder
-          - group_count = 4
+        - vertex_count = 7, groups = 4 - non divisible - all groups are vertex_count // (groups-1) long, except the last group takes the remainder
           - indices_per_group = [[0, 1], [2, 3], [4, 5], [6]]
 
         Returns:
@@ -173,35 +170,24 @@ class GroupUtils:
         """
 
         # Initialize output variables
-        group_count_asked = groups
+        group_count: int = groups
         indices_per_group: list[list[int]] = []
 
         # Create the indices per group for this case
-        element_count_per_group = vertex_count // group_count_asked
-        # Compute the actual group count with the remainder group if needed
-        group_count = group_count_asked + (1 if vertex_count % group_count_asked != 0 else 0)
+        element_count_per_group = (vertex_count // group_count) if (vertex_count % group_count == 0) else (vertex_count // (group_count - 1))
 
         for group_index in range(group_count):
             is_last_group = group_index == group_count - 1
-            if is_last_group is False:
-                # Compute the start and end indices for this group
-                start_index = element_count_per_group * group_index
-                end_index = start_index + element_count_per_group
+            start_index = element_count_per_group * group_index
+            end_index = (start_index + element_count_per_group) if is_last_group is False else vertex_count
 
-                # Fill the indices for this group
-                indices_per_group.append(list(range(start_index, end_index)))
-            else:
-                # Last group takes the remainder
-                start_index = element_count_per_group * group_index
-                end_index = vertex_count
+            # Fill the indices for this group
+            indices_per_group.append(list(range(start_index, end_index)))
 
-                # Fill the indices for this group
-                indices_per_group.append(list(range(start_index, vertex_count)))
-
-        return group_count_asked, indices_per_group
+        return indices_per_group
 
     @staticmethod
-    def _compute_indices_per_group_list_int(vertex_count: int, groups: list[int]) -> tuple[int, list[list[int]]]:
+    def _compute_indices_per_group_list_int(vertex_count: int, groups: list[int]) -> list[list[int]]:
         """Compute indices_per_group for groups as list[int].
         In this case, each int represents the size of each group.
 
@@ -214,7 +200,6 @@ class GroupUtils:
         """
 
         # Initialize output variables
-        group_count_asked = len(groups)
         indices_per_group: list[list[int]] = []
 
         # Create the indices per group for this case
@@ -227,10 +212,10 @@ class GroupUtils:
             # Update the current index
             current_index += group_size
 
-        return group_count_asked, indices_per_group
+        return indices_per_group
 
     @staticmethod
-    def _compute_indices_per_group_list_list_int(vertex_count: int, groups: list[list[int]]) -> tuple[int, list[list[int]]]:
+    def _compute_indices_per_group_list_list_int(vertex_count: int, groups: list[list[int]]) -> list[list[int]]:
         """Compute indices_per_group for groups as list[list[int]].
         In this case, the groups are directly the indices per group themselves.
 
@@ -243,7 +228,6 @@ class GroupUtils:
         """
 
         # Initialize output variables
-        group_count_asked = len(groups)
         indices_per_group: list[list[int]] = groups
 
-        return group_count_asked, indices_per_group
+        return indices_per_group

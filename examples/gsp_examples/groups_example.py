@@ -24,13 +24,13 @@ def main():
     # Add random points
     # - various ways to create Buffers
     # =============================================================================
-    point_count = 3000
+    pixel_count = 3000
     group_count = 2
-    assert point_count % group_count == 0, "Point count must be divisible by group count"
+    assert pixel_count % group_count == 0, "Pixels count must be divisible by group count"
 
     # Random positions - Create buffer from numpy array
-    positions_numpy_1 = np.random.rand(point_count // 2, 3).astype(np.float32) * +1.0
-    positions_numpy_2 = np.random.rand(point_count // 2, 3).astype(np.float32) * -1.0
+    positions_numpy_1 = np.random.rand(pixel_count // 2, 3).astype(np.float32) * +1.0
+    positions_numpy_2 = np.random.rand(pixel_count // 2, 3).astype(np.float32) * -1.0
     positions_numpy = np.vstack((positions_numpy_1, positions_numpy_2))
     positions_buffer = Bufferx.from_numpy(positions_numpy, BufferType.vec3)
 

@@ -41,7 +41,8 @@ class RendererPixels:
         #   Compute indices_per_group for groups depending on the type of groups
         # =============================================================================
 
-        group_count, indices_per_group = GroupUtils.compute_indices_per_group(vertices_numpy.__len__(), pixels._groups)
+        indices_per_group = GroupUtils.compute_indices_per_group(vertices_numpy.__len__(), pixels._groups)
+        group_count = len(indices_per_group)
 
         # =============================================================================
         # Create the artists if needed
