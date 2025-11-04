@@ -9,6 +9,7 @@ from gsp.core.camera import Camera
 from gsp.utils.group_utils import GroupUtils
 from gsp.visuals.pixels import Pixels
 from gsp.utils.transbuf_utils import TransBufUtils
+from gsp.utils.math_utils import MathUtils
 from gsp.types.transbuf import TransBuf
 from .renderer import MatplotlibRenderer
 from ..extra.bufferx import Bufferx
@@ -26,14 +27,20 @@ class RendererPixels:
         pixels: Pixels = visual
 
         # =============================================================================
-        # Get existing artists
+        # Transform vertices with MVP matrix
         # =============================================================================
 
-        vertices_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels._positions))
-        # sanity check
-        assert vertices_numpy.shape[1] == 3, "Positions must have shape (N, 3)"
-        # TODO
-        vertices_2d = vertices_numpy[:, :2]  # drop z-coordinate for 2D rendering
+        # convert all necessary buffers to numpy arrays
+        vertices_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.get_positions()))
+        model_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(model_matrix)).squeeze()
+        view_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(camera.get_view_matrix())).squeeze()
+        projection_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(camera.get_projection_matrix())).squeeze()
+
+        # Apply Model-View-Projection transformation to the vertices
+        vertices_3d_transformed = MathUtils.apply_mvp_to_vertices(vertices_numpy, model_matrix_numpy, view_matrix_numpy, projection_matrix_numpy)
+
+        # Convert 3D vertices to 2D - shape (N, 2)
+        vertices_2d = vertices_3d_transformed[:, :2]
 
         colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels._colors)) / 255.0  # normalize to [0, 1] range
 
