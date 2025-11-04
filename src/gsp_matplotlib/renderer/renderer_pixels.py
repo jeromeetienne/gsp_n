@@ -30,11 +30,16 @@ class RendererPixels:
         # Transform vertices with MVP matrix
         # =============================================================================
 
+        vertices_buffer = TransBufUtils.to_buffer(pixels.get_positions())
+        model_matrix_buffer = TransBufUtils.to_buffer(model_matrix)
+        view_matrix_buffer = TransBufUtils.to_buffer(camera.get_view_matrix())
+        projection_matrix_buffer = TransBufUtils.to_buffer(camera.get_projection_matrix())
+
         # convert all necessary buffers to numpy arrays
-        vertices_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels.get_positions()))
-        model_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(model_matrix)).squeeze()
-        view_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(camera.get_view_matrix())).squeeze()
-        projection_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(camera.get_projection_matrix())).squeeze()
+        vertices_numpy = Bufferx.to_numpy(vertices_buffer)
+        model_matrix_numpy = Bufferx.to_numpy(model_matrix_buffer).squeeze()
+        view_matrix_numpy = Bufferx.to_numpy(view_matrix_buffer).squeeze()
+        projection_matrix_numpy = Bufferx.to_numpy(projection_matrix_buffer).squeeze()
 
         # Apply Model-View-Projection transformation to the vertices
         vertices_3d_transformed = MathUtils.apply_mvp_to_vertices(vertices_numpy, model_matrix_numpy, view_matrix_numpy, projection_matrix_numpy)
@@ -42,20 +47,29 @@ class RendererPixels:
         # Convert 3D vertices to 2D - shape (N, 2)
         vertices_2d = vertices_3d_transformed[:, :2]
 
-        colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(pixels._colors)) / 255.0  # normalize to [0, 1] range
+        # =============================================================================
+        # Convert all attributes to numpy arrays
+        # =============================================================================
+
+        # Convert all attributes to buffer
+        color_buffer = TransBufUtils.to_buffer(pixels.get_colors())
+
+        # Convert buffers to numpy arrays
+        colors_numpy = Bufferx.to_numpy(color_buffer) / 255.0  # normalize to [0, 1] range
 
         # =============================================================================
         #   Compute indices_per_group for groups depending on the type of groups
         # =============================================================================
 
-        indices_per_group = GroupUtils.compute_indices_per_group(vertices_numpy.__len__(), pixels._groups)
+        indices_per_group = GroupUtils.compute_indices_per_group(vertices_numpy.__len__(), pixels.get_groups())
         group_count = len(indices_per_group)
 
         # =============================================================================
         # Create the artists if needed
         # =============================================================================
 
-        if pixels.uuid not in renderer._artists:
+        artist_uuid_sample = f"{visual.uuid}_group_0"
+        if artist_uuid_sample not in renderer._artists:
             # Get DPI to compute pixel size
             assert axes.figure.get_dpi() is not None, "Canvas DPI must be set for proper pixel sizing"
             # TODO move that into a unit_helper module - to help with unit conversions
@@ -72,7 +86,7 @@ class RendererPixels:
                 mpl_path_collection.set_linewidth(0)
                 mpl_path_collection.set_visible(False)
                 # hide until properly positioned and sized
-                group_uuid = f"{pixels.uuid}_group_{group_index}"
+                group_uuid = f"{visual.uuid}_group_{group_index}"
                 renderer._artists[group_uuid] = mpl_path_collection
                 axes.add_artist(mpl_path_collection)
 
@@ -82,7 +96,7 @@ class RendererPixels:
 
         changed_artists: list[matplotlib.artist.Artist] = []
         for group_index in range(group_count):
-            group_uuid = f"{pixels.uuid}_group_{group_index}"
+            group_uuid = f"{visual.uuid}_group_{group_index}"
 
             # =============================================================================
             # Get existing artists

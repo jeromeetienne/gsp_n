@@ -5,7 +5,7 @@ import os
 from gsp.types.buffer import Buffer, BufferType
 from gsp.transforms.transform_chain import TransformChain
 from gsp.transforms.links.transform_data_source import TransformDataSource
-from gsp.transforms.links.transform_accessor import TransformAccessor
+from examples.gsp_examples.gsp_extra.transform_links.transform_link_immediate import TransformLinkImmediate
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))

@@ -13,5 +13,4 @@ class TransformLinkImmediate(TransformLink):
         self._buffer = buffer
 
     def apply(self, buffer_src: Buffer) -> Buffer:
-
         return self._buffer

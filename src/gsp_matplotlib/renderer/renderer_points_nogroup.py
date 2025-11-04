@@ -7,6 +7,7 @@ import numpy as np
 
 # local imports
 from gsp.core.camera import Camera
+from gsp.utils.math_utils import MathUtils
 from gsp.visuals.points import Points
 from gsp.utils.transbuf_utils import TransBufUtils
 from gsp.types.transbuf import TransBuf
@@ -27,30 +28,17 @@ class RendererPoints:
         points: Points = visual
 
         # =============================================================================
-        # Get existing artists
+        # Transform vertices with MVP matrix
         # =============================================================================
 
-        vertices_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.positions))
-
-        # Compute the Model-View-Projection (MVP) matrix
+        # convert all necessary buffers to numpy arrays
+        vertices_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points._positions))
         model_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(model_matrix)).squeeze()
         view_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(camera.get_view_matrix())).squeeze()
         projection_matrix_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(camera.get_projection_matrix())).squeeze()
-        mvp_matrix_numpy = projection_matrix_numpy @ view_matrix_numpy @ model_matrix_numpy
 
-        # convert vertices to homogeneous coordinates (x, y, z) -> (x, y, z, w=1.0)
-        ws_column = np.ones((vertices_numpy.shape[0], 1), dtype=np.float32)
-        vertices_homogeneous = np.hstack((vertices_numpy, ws_column))  # shape (N, 4) for N vertices
-
-        # Apply the MVP transformation to the vertices
-        vertices_transformed = (mvp_matrix_numpy @ vertices_homogeneous.T).T  # shape (N, 4)
-
-        # Perform perspective division to get normalized device coordinates (NDC)
-        vertices_homo_transformed = vertices_transformed / vertices_transformed[:, 3:4]  # divide by w - shape (N, 4)
-        vertices_3d_transformed = vertices_homo_transformed[:, :3]  # drop w-coordinate - shape (N, 3)
-
-        # NOTE: no need to map NDC to screen coordinates as canvas is drawn directly in NDC coordinates 2d
-        pass
+        # Apply Model-View-Projection transformation to the vertices
+        vertices_3d_transformed = MathUtils.apply_mvp_to_vertices(vertices_numpy, model_matrix_numpy, view_matrix_numpy, projection_matrix_numpy)
 
         # Convert 3D vertices to 2D - shape (N, 2)
         vertices_2d = vertices_3d_transformed[:, :2]
@@ -59,10 +47,10 @@ class RendererPoints:
         # Convert all attributes to numpy arrays
         # =============================================================================
 
-        sizes_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.sizes))
-        face_colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.face_colors)) / 255.0  # normalize to [0, 1] range
-        edge_colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.edge_colors)) / 255.0  # normalize to [0, 1] range
-        edge_widths_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points.edge_widths)).flatten()
+        sizes_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points._sizes))
+        face_colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points._face_colors)) / 255.0  # normalize to [0, 1] range
+        edge_colors_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points._edge_colors)) / 255.0  # normalize to [0, 1] range
+        edge_widths_numpy = Bufferx.to_numpy(TransBufUtils.to_buffer(points._edge_widths)).flatten()
 
         # =============================================================================
         # Create the artists if needed

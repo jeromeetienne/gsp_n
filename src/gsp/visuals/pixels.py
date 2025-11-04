@@ -60,7 +60,8 @@ class Pixels(VisualBase):
     @staticmethod
     def sanity_check_attributes_buffer(positions: Buffer, colors: Buffer, groups: Groups):
         """same as .sanity_check_attributes() but accept only Buffers.
-        It is means to be used after converting TransBuf to Buffer.
+
+        - It is meant to be used after converting TransBuf to Buffer.
         """
         # sanity check - each attribute must be a Buffer (not a transform chain)
         assert isinstance(positions, Buffer), "Positions must be a Buffer"
