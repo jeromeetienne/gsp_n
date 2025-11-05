@@ -63,10 +63,6 @@ class TransformChain:
         """Add a TransformLink to the chain."""
         self.__links.append(link)
 
-    def clear(self) -> None:
-        """Clear all TransformLinks from the chain."""
-        self.__links.clear()
-
     def remove(self, link: TransformLink) -> None:
         """Remove a TransformLink from the chain."""
         self.__links.remove(link)

@@ -1,7 +1,10 @@
+- issue if the user changes the groups after having created the visual
+  - this would require to detect when the groups changes
+  - 
 - find examples to test the groups
 - make transform chain
   - download
-  - make one user space
+  - make one user space `TransformLinkImmediate`
 - the attributes check system for all visual
   - should be done in the renderer too (post transformation)
   - static .sanity_check_attributes()

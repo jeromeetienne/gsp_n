@@ -22,9 +22,9 @@ class BufferType(Enum):
 class Constants:
     """Common constants like colors."""
 
-    red = int(b'\xFF\x00\x00\xFF')
-    green = int(b'\x00\xFF\x00\xFF')
-    blue = int(b'\x00\x00\xFF\xFF')
+    red = int(b"\xff\x00\x00\xff")
+    green = int(b"\x00\xff\x00\xff")
+    blue = int(b"\x00\x00\xff\xff")
 
 class Buffer:
     """typed array with single dimension
@@ -42,16 +42,6 @@ class Buffer:
     @staticmethod
     def from_numpy(ndarray: numpy.ndarray) -> "Buffer": ...
 
-# class Mat4:
-#     """4x4 Matrix. Handle Model, View, Projection matrices."""
-
-#     def __init__(self, data: list[list[float]] | None = None) -> None: ...
-#     """4x4 Matrix. if data is None, initializes to identity matrix."""
-#     def get_data(self) -> list[list[float]]: ...
-#     def set_data(self, data: list[list[float]]) -> None: ...
-#     @staticmethod
-#     def from_numpy(ndarray: numpy.ndarray) -> "Mat4": ...
-
 class DataSource:
     """Data source from which data can be loaded and **decoded**, e.g., image file path. .npy numpy files"""
 
@@ -64,6 +54,7 @@ class DataSource:
 
 class TransformLink:
     """Base class for a link in a Transform chain."""
+
     ...
 
 class Transform:
@@ -83,7 +74,7 @@ class Transform:
 class TransformOperator(TransformLink):
     """A transformation link that applies an operator with an operand."""
 
-    operator: Literal['add', 'sub', 'mul', 'div']
+    operator: Literal["add", "sub", "mul", "div"]
     """Operator to apply. One of 'add', 'sub', 'mul', 'div'."""
 
     # FIXME: this operand may be a Buffer or a Transform in the future
@@ -100,13 +91,13 @@ class TransformDataSource(TransformLink):
 class TransformMeasure(TransformLink):
     """A transformation link that applies unit conversion."""
 
-    unit: Literal['dot', 'pixel', 'inch', 'centimeter']
+    unit: Literal["dot", "pixel", "inch", "centimeter"]
     """Unit to convert to, e.g., 'meter', 'pixel', etc."""
 
 class TransformAccessor(TransformLink):
     """A transformation link that accesses a specific field from structured data."""
 
-    field_name: Literal['x', 'y', 'z', 'w', 'r', 'g', 'b', 'a']
+    field_name: Literal["x", "y", "z", "w", "r", "g", "b", "a"]
     """Name of the field to access in the structured data."""
 
 class TransformSetData(TransformLink):
@@ -122,7 +113,7 @@ class TransformSetData(TransformLink):
 class TransformColorMap(TransformLink):
     """A transformation link that project scalar data to color using a colormap. Assume the scalar is normalized between 0 and 1."""
 
-    colormap_name: Literal['viridis', 'plasma', 'inferno', 'magma', 'cividis']
+    colormap_name: Literal["viridis", "plasma", "inferno", "magma", "cividis"]
     """Name of the colormap to use. Based on matplotlib colormaps."""
 
 # =============================================================================
@@ -180,9 +171,7 @@ class Visual:
     def set_model_matrix(self, matrix: Mat4) -> None: ...
 
 class Pixels(Visual):
-    def __init__(
-        self, positions: TransBuf, colors: TransBuf, groups: TransBuf
-    ) -> None: ...
+    def __init__(self, positions: TransBuf, colors: TransBuf, groups: TransBuf) -> None: ...
     def set_positions(self, x: int, y: int, color: tuple[int, int, int]) -> None: ...
     def get_positions(self) -> list[tuple[int, int, tuple[int, int, int]]]: ...
 
