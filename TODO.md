@@ -1,6 +1,6 @@
 - issue if the user changes the groups after having created the visual
   - this would require to detect when the groups changes
-  - 
+- BUG: if i dont draw a visual which were there before, it is never removed from the renderer
 - find examples to test the groups
 - make transform chain
   - download

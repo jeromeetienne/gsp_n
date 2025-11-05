@@ -1,11 +1,13 @@
+# stdlib imports
+from typing import Sequence
+import time
+
+
 # pip imports
 import numpy as np
 import matplotlib.pyplot
 import matplotlib.animation
 import matplotlib.artist
-import typing
-from typing import Sequence
-import time
 
 
 # local imports
