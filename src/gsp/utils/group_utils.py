@@ -8,6 +8,25 @@ from ..types.group import Groups
 
 class GroupUtils:
 
+    @staticmethod
+    def get_group_count(groups: Groups) -> int:
+        """Return the number of groups from the groups object."""
+
+        groups_format = GroupUtils._groups_format(groups)
+        if groups_format == GroupUtils.FORMAT_INT:
+            groups_typed = typing.cast(int, groups)
+            group_count = groups_typed
+        elif groups_format == GroupUtils.FORMAT_LIST_INT:
+            groups_typed = typing.cast(list[int], groups)
+            group_count = len(groups_typed)
+        elif groups_format == GroupUtils.FORMAT_LIST_LIST_INT:
+            groups_typed = typing.cast(list[list[int]], groups)
+            group_count = len(groups_typed)
+        else:
+            raise NotImplementedError(f"Group buffer shape not supported: {type(groups)}")
+
+        return group_count
+
     # =============================================================================
     # is_instance_of_groups
     # =============================================================================
@@ -119,6 +138,7 @@ class GroupUtils:
     # =============================================================================
     # .compute_indices_per_group
     # =============================================================================
+
     @staticmethod
     def compute_indices_per_group(vertex_count: int, groups: Groups) -> list[list[int]]:
         """Compute indices_per_group for groups depending on the type of groups

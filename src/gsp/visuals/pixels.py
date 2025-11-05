@@ -1,7 +1,9 @@
 from ..core.visual_base import VisualBase
 from ..types.transbuf import TransBuf
 from ..types.buffer import Buffer
+from ..transforms.transform_chain import TransformChain
 from ..types.group import Groups
+from ..utils.group_utils import GroupUtils
 
 
 class Pixels(VisualBase):
@@ -72,6 +74,30 @@ class Pixels(VisualBase):
     @staticmethod
     def sanity_check_attributes(positions: TransBuf, colors: TransBuf, groups: Groups):
 
-        # check groups are valid
+        # =============================================================================
+        # if any of the attributes is a TransformChain not fully defined, skip the sanity check
+        # =============================================================================
 
-        pass
+        if isinstance(positions, TransformChain) and not positions.is_fully_defined():
+            return
+        if isinstance(colors, TransformChain) and not colors.is_fully_defined():
+            return
+
+        # =============================================================================
+        # Check groups
+        # =============================================================================
+
+        # get position_count and group_count
+        position_count = positions.get_count() if isinstance(positions, Buffer) else positions.get_buffer_count()
+        group_count = GroupUtils.get_group_count(groups)
+
+        # Check groups matches position count
+        GroupUtils.sanity_check(position_count, groups)
+
+        # =============================================================================
+        # Check each attributes
+        # =============================================================================
+
+        # Check colors attribute
+        color_count = colors.get_count() if isinstance(colors, Buffer) else colors.get_buffer_count()
+        assert color_count == group_count, f"Colors count {color_count} must match group count {group_count}"

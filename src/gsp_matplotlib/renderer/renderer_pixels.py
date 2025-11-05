@@ -57,7 +57,7 @@ class RendererPixels:
         # Convert buffers to numpy arrays
         colors_numpy = Bufferx.to_numpy(color_buffer) / 255.0  # normalize to [0, 1] range
 
-        # Sanity check - check that
+        # Sanity check - check visual attributes
         Pixels.sanity_check_attribute_buffers(vertices_buffer, color_buffer, pixels.get_groups())
 
         # =============================================================================
