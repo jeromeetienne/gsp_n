@@ -1,3 +1,6 @@
+# stdlib imports
+from abc import ABC, abstractmethod
+
 # local imports
 from ..types import BufferType, Buffer
 
@@ -5,9 +8,10 @@ from ..types import BufferType, Buffer
 # =============================================================================
 # TransformLink
 # =============================================================================
-class TransformLink:
+class TransformLink(ABC):
     """Base class for a link in a Transform chain."""
 
-    def apply(self, buffer: Buffer | None) -> Buffer:
+    @abstractmethod
+    def apply(self, buffer_src: Buffer | None) -> Buffer:
         """Apply the transformation to the given buffer and return a new buffer."""
-        raise NotImplementedError("TransformLink.apply is not implemented yet.")
+        pass

@@ -15,17 +15,20 @@ class TransformAccessor(TransformLink):
     def __init__(self, field_name: TransformAccessorFieldName) -> None:
         self._field_name = field_name
 
-    def apply(self, buffer: Buffer) -> Buffer:
+    def apply(self, buffer_src: Buffer | None) -> Buffer:
+        # sanity check
+        assert buffer_src is not None, "Input buffer cannot be None"
+
         # Map field names to indices
         field_to_index = {"r": 0, "g": 1, "b": 2, "a": 3, "x": 0, "y": 1, "z": 2, "w": 3}
         index = field_to_index[self._field_name]
-        item_size = BufferType.get_item_size(buffer.get_type())
+        item_size = BufferType.get_item_size(buffer_src.get_type())
 
         # sanity check
-        assert buffer.get_count() % 4 == 0, f"Input buffer count must be a multiple of 4"
+        assert buffer_src.get_count() % 4 == 0, f"Input buffer count must be a multiple of 4"
 
         # Create a new buffer for the accessed field
-        new_count = buffer.get_count() // 4
-        new_buffer = Buffer(new_count, buffer.get_type())
+        new_count = buffer_src.get_count() // 4
+        new_buffer = Buffer(new_count, buffer_src.get_type())
 
         raise NotImplementedError("TransformAccessor.apply is not implemented yet.")

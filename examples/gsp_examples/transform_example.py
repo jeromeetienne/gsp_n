@@ -19,7 +19,7 @@ def main():
     transformChain.add(TransformDataSource(image_url, BufferType.uint8))
     # transformChain.add(TransformAccessor("r"))
 
-    buffer = transformChain.to_buffer()
+    buffer = transformChain.run()
     print(buffer)
 
 

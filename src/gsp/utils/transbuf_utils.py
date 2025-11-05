@@ -18,7 +18,7 @@ class TransBufUtils:
             return buffer
         elif isinstance(trans_buf, TransBuf):
             transform_chain = typing.cast(TransformChain, trans_buf)
-            buffer = transform_chain.to_buffer()
+            buffer = transform_chain.run()
             return buffer
         else:
             raise ValueError(f"Unsupported type for transbuf_to_buffer {type(trans_buf)}")

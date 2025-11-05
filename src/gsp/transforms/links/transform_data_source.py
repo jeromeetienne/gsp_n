@@ -19,7 +19,7 @@ class TransformDataSource(TransformLink):
         self._uri = uri
         self._buffer_type = buffer_type
 
-    def apply(self, _buffer: Buffer) -> Buffer:
+    def apply(self, buffer_src: Buffer | None) -> Buffer:
         item_size = BufferType.get_item_size(self._buffer_type)
 
         is_image = os.path.splitext(self._uri)[1].lower() in [".png", ".jpg", ".jpeg", ".bmp", ".tiff"]

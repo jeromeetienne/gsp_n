@@ -13,6 +13,10 @@ class TransformChain:
         self.links: list[TransformLink] = []
         """Ordered list of links defining the transform."""
 
+    # =============================================================================
+    # .add/.remove/.clear the links
+    # =============================================================================
+
     def add(self, link: TransformLink) -> None:
         """Add a TransformLink to the chain."""
         self.links.append(link)
@@ -25,7 +29,11 @@ class TransformChain:
         """Remove a TransformLink from the chain."""
         self.links.remove(link)
 
-    def to_buffer(self) -> Buffer:
+    # =============================================================================
+    # .run()
+    # =============================================================================
+
+    def run(self) -> Buffer:
         """Compute the transform and return a Buffer with the result."""
 
         # Create a new Buffer to hold the transformed data
