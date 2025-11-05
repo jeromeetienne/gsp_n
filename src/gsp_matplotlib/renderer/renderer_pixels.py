@@ -12,7 +12,7 @@ from gsp.visuals.pixels import Pixels
 from gsp.utils.transbuf_utils import TransBufUtils
 from gsp.utils.math_utils import MathUtils
 from gsp.types.transbuf import TransBuf
-from .renderer import MatplotlibRenderer
+from gsp_matplotlib.renderer import MatplotlibRenderer
 from ..extra.bufferx import Bufferx
 
 
@@ -72,15 +72,15 @@ class RendererPixels:
         # Create the artists if needed
         # =============================================================================
 
-        # # update stored group count
-        # old_group_count = None
-        # if visual.uuid in renderer._group_count:
-        #     old_group_count = renderer._group_count[visual.uuid]
-        # renderer._group_count[visual.uuid] = group_count
+        # update stored group count
+        old_group_count = None
+        if visual.uuid in renderer._group_count:
+            old_group_count = renderer._group_count[visual.uuid]
+        renderer._group_count[visual.uuid] = group_count
 
-        # # If the group count has changed, destroy old artists
-        # if old_group_count is not None and old_group_count != group_count:
-        #     RendererPixels.destroy_artists(renderer, axes, visual, old_group_count)
+        # If the group count has changed, destroy old artists
+        if old_group_count is not None and old_group_count != group_count:
+            RendererPixels.destroy_artists(renderer, axes, visual, old_group_count)
 
         # Create artists if they do not exist
         artist_uuid_sample = f"{visual.uuid}_group_0"
@@ -137,8 +137,26 @@ class RendererPixels:
 
     @staticmethod
     def destroy_artists(renderer: MatplotlibRenderer, axes: matplotlib.axes.Axes, visual: VisualBase, group_count: int) -> None:
+        """Destroy the artists associated with the given visual and group count.
+
+        Trigger a bug in matplotlib where artists are not properly removed from the axes.
+        """
         for group_index in range(group_count):
             group_uuid = f"{visual.uuid}_group_{group_index}"
             mpl_path_collection = typing.cast(matplotlib.collections.PathCollection, renderer._artists[group_uuid])
             del renderer._artists[group_uuid]
             mpl_path_collection.remove()
+
+            # axes.collections.remove(mpl_path_collection)
+            # axes.collections.remove(axes.collections.index(mpl_path_collection))
+
+            ax = axes
+            artist = mpl_path_collection
+
+            print("Artist:", artist)
+            print("In ax.artists?", artist in ax.artists)
+            print("In ax.patches?", artist in ax.patches)
+            print("In ax.lines?", artist in ax.lines)
+            print("In ax.collections?", artist in ax.collections)
+            print("In ax.texts?", artist in ax.texts)
+            print("Figure art?", artist in getattr(ax.figure, "artists", []))

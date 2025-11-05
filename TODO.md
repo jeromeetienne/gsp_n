@@ -1,7 +1,8 @@
 - issue if the user changes the groups after having created the visual
   - this would require to detect when the groups changes
+  - find examples to test the groups
 - BUG: if i dont draw a visual which were there before, it is never removed from the renderer
-- find examples to test the groups
+  - https://chatgpt.com/c/690b2e53-4058-8328-93e5-f598f1696929
 - make transform chain
   - download
   - make one user space `TransformLinkImmediate`
