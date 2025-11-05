@@ -6,6 +6,7 @@ import matplotlib.artist
 
 # local imports
 from gsp.core.camera import Camera
+from gsp.core.visual_base import VisualBase
 from gsp.utils.group_utils import GroupUtils
 from gsp.visuals.pixels import Pixels
 from gsp.utils.transbuf_utils import TransBufUtils
@@ -71,27 +72,20 @@ class RendererPixels:
         # Create the artists if needed
         # =============================================================================
 
+        # update stored group count
+        old_group_count = None
+        if visual.uuid in renderer._group_count:
+            old_group_count = renderer._group_count[visual.uuid]
+        renderer._group_count[visual.uuid] = group_count
+
+        # If the group count has changed, destroy old artists
+        if old_group_count is not None and old_group_count != group_count:
+            RendererPixels.__destroy_artists(renderer, axes, visual, old_group_count)
+
+        # Create artists if they do not exist
         artist_uuid_sample = f"{visual.uuid}_group_0"
         if artist_uuid_sample not in renderer._artists:
-            # Get DPI to compute pixel size
-            assert axes.figure.get_dpi() is not None, "Canvas DPI must be set for proper pixel sizing"
-            # TODO move that into a unit_helper module - to help with unit conversions
-            one_point_in_inches = 1.0 / 72.0
-            # Marker sizes in matplotlib are specified in "points squared" (pt²)
-            # - Squaring the ratio converts a linear scale (points) to an area scale (points squared).
-            size_point_squared = (one_point_in_inches * axes.figure.get_dpi()) ** 2
-            # hardcoded scale factor to get approximately 1 pixel size
-            size = 0.25 * size_point_squared
-
-            for group_index in range(group_count):
-                mpl_path_collection = axes.scatter([], [], s=size, marker="o")
-                mpl_path_collection.set_antialiased(True)
-                mpl_path_collection.set_linewidth(0)
-                mpl_path_collection.set_visible(False)
-                # hide until properly positioned and sized
-                group_uuid = f"{visual.uuid}_group_{group_index}"
-                renderer._artists[group_uuid] = mpl_path_collection
-                axes.add_artist(mpl_path_collection)
+            RendererPixels.__create_artists(renderer, axes, visual, group_count)
 
         # =============================================================================
         # Update matplotlib for each group
@@ -118,3 +112,33 @@ class RendererPixels:
 
         # Return the list of artists created/updated
         return changed_artists
+
+    @staticmethod
+    def __create_artists(renderer: MatplotlibRenderer, axes: matplotlib.axes.Axes, visual: VisualBase, group_count: int) -> None:
+        # Get DPI to compute pixel size
+        assert axes.figure.get_dpi() is not None, "Canvas DPI must be set for proper pixel sizing"
+        # TODO move that into a unit_helper module - to help with unit conversions
+        one_point_in_inches = 1.0 / 72.0
+        # Marker sizes in matplotlib are specified in "points squared" (pt²)
+        # - Squaring the ratio converts a linear scale (points) to an area scale (points squared).
+        size_point_squared = (one_point_in_inches * axes.figure.get_dpi()) ** 2
+        # hardcoded scale factor to get approximately 1 pixel size
+        size = 0.25 * size_point_squared
+
+        for group_index in range(group_count):
+            mpl_path_collection = axes.scatter([], [], s=size, marker="o")
+            mpl_path_collection.set_antialiased(True)
+            mpl_path_collection.set_linewidth(0)
+            mpl_path_collection.set_visible(False)
+            # hide until properly positioned and sized
+            group_uuid = f"{visual.uuid}_group_{group_index}"
+            renderer._artists[group_uuid] = mpl_path_collection
+            axes.add_artist(mpl_path_collection)
+
+    @staticmethod
+    def __destroy_artists(renderer: MatplotlibRenderer, axes: matplotlib.axes.Axes, visual: VisualBase, group_count: int) -> None:
+        for group_index in range(group_count):
+            group_uuid = f"{visual.uuid}_group_{group_index}"
+            mpl_path_collection = typing.cast(matplotlib.collections.PathCollection, renderer._artists[group_uuid])
+            del renderer._artists[group_uuid]
+            mpl_path_collection.remove()

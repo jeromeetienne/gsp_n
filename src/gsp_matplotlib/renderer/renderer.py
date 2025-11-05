@@ -25,6 +25,8 @@ class MatplotlibRenderer:
         self._axes: dict[str, matplotlib.axes.Axes] = {}
         # Store mapping of visual UUIDs to matplotlib artists
         self._artists: dict[str, matplotlib.artist.Artist] = {}
+        # Store group count per visual UUID
+        self._group_count: dict[str, int] = {}
 
         # Create a figure of 512x512 pixels
         self._figure = matplotlib.pyplot.figure(figsize=(canvas.width / canvas.dpi, canvas.height / canvas.dpi), dpi=canvas.dpi)
