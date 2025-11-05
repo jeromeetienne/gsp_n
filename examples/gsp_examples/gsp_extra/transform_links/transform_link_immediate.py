@@ -12,5 +12,5 @@ class TransformLinkImmediate(TransformLink):
     def __init__(self, buffer: Buffer) -> None:
         self._buffer = buffer
 
-    def apply(self, buffer_src: Buffer) -> Buffer:
+    def apply(self, buffer_src: Buffer | None) -> Buffer:
         return self._buffer

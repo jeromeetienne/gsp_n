@@ -1,5 +1,3 @@
-- make the groups in pixels and points
-
 - find examples to test the groups
 - make transform chain
   - download
@@ -13,6 +11,7 @@
 
 ---
 
+- DONE make the groups in pixels and points
 - DONE make groups computation in core with common functions
 - DONE make the 3d transformations in pixels and points
 - DONE implement Pixels

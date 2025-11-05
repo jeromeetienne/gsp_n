@@ -1,26 +1,61 @@
-# stdlib imports
-import os
+# pip imports
+import numpy as np
+import matplotlib.pyplot
+
 
 # local imports
-from gsp.types.buffer import Buffer, BufferType
-from gsp.transforms.transform_chain import TransformChain
-from gsp.transforms.links.transform_data_source import TransformDataSource
-from examples.gsp_examples.gsp_extra.transform_links.transform_link_immediate import TransformLinkImmediate
-
-
-__dirname__ = os.path.dirname(os.path.abspath(__file__))
+from gsp.core import Canvas, Viewport, VisualBase, Camera
+from gsp.visuals import Pixels
+from gsp.types import Buffer, BufferType
+from gsp.transforms import TransformChain
+from gsp_matplotlib.renderer import MatplotlibRenderer
+from gsp_extra.bufferx import Bufferx
+from gsp_extra.transform_links import TransformLinkImmediate
 
 
 def main():
-    transformChain = TransformChain(BufferType.uint32)
+    # Create a canvas
+    canvas = Canvas(512, 512, 96.0)
 
-    image_url = f"file://{__dirname__}/images/image.png"
-    image_url = f"file://{__dirname__}/images/UV_Grid_Sm.jpg"
-    transformChain.add(TransformDataSource(image_url, BufferType.uint8))
-    # transformChain.add(TransformAccessor("r"))
+    # Create a viewport and add it to the canvas
+    viewport = Viewport(0, 0, canvas.get_width(), canvas.get_height())
 
-    buffer = transformChain.to_buffer()
-    print(buffer)
+    # =============================================================================
+    # Add random points
+    # - various ways to create Buffers
+    # =============================================================================
+    point_count = 1024
+    group_count = 1
+
+    # Random positions - Create buffer from numpy array
+    positions_numpy = np.random.rand(point_count, 3).astype(np.float32) * 2.0 - 1
+    positions_buffer = Bufferx.from_numpy(positions_numpy, BufferType.vec3)
+
+    # all pixels red - Create buffer and fill it with a constant
+    colors_buffer = Buffer(group_count, BufferType.rgba8)
+    colors_buffer.set_data(bytearray([255, 0, 0, 255]) * colors_buffer.get_count(), 0, 1)
+    colors_transform = TransformChain()
+    colors_transform.add(TransformLinkImmediate(colors_buffer))
+
+    # Create the Pixels visual and add it to the viewport
+    pixels = Pixels(positions_buffer, colors_transform, group_count)
+    model_matrix = Bufferx.mat4_identity()
+
+    # =============================================================================
+    # Render the canvas
+    # =============================================================================
+
+    # Create a camera
+    view_matrix = Bufferx.mat4_identity()
+    projection_matrix = Buffer(1, BufferType.mat4)
+    projection_matrix.set_data(bytearray(np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], dtype=np.float32).tobytes()), 0, 1)
+    camera = Camera(view_matrix, projection_matrix)
+
+    # Create a renderer and render the scene
+    matplotlibRenderer = MatplotlibRenderer(canvas)
+    matplotlibRenderer.render([viewport], [pixels], [model_matrix], [camera])
+
+    matplotlib.pyplot.show()
 
 
 if __name__ == "__main__":

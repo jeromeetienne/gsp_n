@@ -12,7 +12,7 @@ __dirname__ = os.path.dirname(os.path.abspath(__file__))
 
 
 def main():
-    transformChain = TransformChain(BufferType.uint32)
+    transformChain = TransformChain()
 
     image_url = f"file://{__dirname__}/images/image.png"
     image_url = f"file://{__dirname__}/images/UV_Grid_Sm.jpg"
