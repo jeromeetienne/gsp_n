@@ -11,6 +11,7 @@ class Bufferx:
 
     @staticmethod
     def mat4_identity() -> Buffer:
+        """Create a Buffer containing a 4x4 identity matrix."""
         mat4_numpy = np.asarray([np.identity(4, dtype=np.float32)])
         buffer = Bufferx.from_numpy(mat4_numpy, BufferType.mat4)
         return buffer
@@ -20,6 +21,7 @@ class Bufferx:
     # =============================================================================
     @staticmethod
     def to_numpy(buffer: Buffer) -> np.ndarray:
+        """Convert a Buffer to a numpy array."""
         if buffer.get_type() == BufferType.float32:
             count = buffer.get_count()
             return np.frombuffer(buffer.to_bytearray(), dtype=np.float32).reshape((count, 1))
@@ -55,6 +57,7 @@ class Bufferx:
 
     @staticmethod
     def from_numpy(array_numpy: np.ndarray, bufferType: BufferType) -> Buffer:
+        """Create a Buffer from a numpy array."""
         if bufferType == BufferType.float32:
             # sanity check
             assert array_numpy.dtype == np.float32, "Numpy array must be of dtype float32"

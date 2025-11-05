@@ -46,4 +46,5 @@ class TransformChain:
         # Sanity check the output buffer
         assert buffer is not None, "TransformChain.to_buffer: No buffer produced by the transform chain."
 
+        # Return the final buffer
         return buffer

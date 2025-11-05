@@ -8,9 +8,9 @@ class Pixels(VisualBase):
     def __init__(self, positions: TransBuf, colors: TransBuf, groups: Groups):
         super().__init__()
 
-        self._positions: TransBuf = positions
-        self._colors: TransBuf = colors
-        self._groups: Groups = groups
+        self.__positions: TransBuf = positions
+        self.__colors: TransBuf = colors
+        self.__groups: Groups = groups
 
         self.check_attributes()
 
@@ -19,34 +19,34 @@ class Pixels(VisualBase):
     # =============================================================================
 
     def get_positions(self) -> TransBuf:
-        return self._positions
+        return self.__positions
 
     def set_positions(self, positions: TransBuf) -> None:
-        self._positions = positions
+        self.__positions = positions
         self.check_attributes()
 
     def get_colors(self) -> TransBuf:
-        return self._colors
+        return self.__colors
 
     def set_colors(self, colors: TransBuf) -> None:
-        self._colors = colors
+        self.__colors = colors
         self.check_attributes()
 
     def get_groups(self) -> Groups:
-        return self._groups
+        return self.__groups
 
     def set_groups(self, groups: Groups) -> None:
-        self._groups = groups
+        self.__groups = groups
         self.check_attributes()
 
     def set_attributes(self, positions: TransBuf | None = None, colors: TransBuf | None = None, groups: Groups | None = None) -> None:
         """Set multiple attributes at once and then check their validity."""
         if positions is not None:
-            self._positions = positions
+            self.__positions = positions
         if colors is not None:
-            self._colors = colors
+            self.__colors = colors
         if groups is not None:
-            self._groups = groups
+            self.__groups = groups
         self.check_attributes()
 
     # =============================================================================
@@ -55,10 +55,10 @@ class Pixels(VisualBase):
 
     def check_attributes(self) -> None:
         """Check that the attributes are valid and consistent."""
-        self.sanity_check_attributes(self._positions, self._colors, self._groups)
+        self.sanity_check_attributes(self.__positions, self.__colors, self.__groups)
 
     @staticmethod
-    def sanity_check_attributes_buffer(positions: Buffer, colors: Buffer, groups: Groups):
+    def sanity_check_attribute_buffers(positions: Buffer, colors: Buffer, groups: Groups):
         """same as .sanity_check_attributes() but accept only Buffers.
 
         - It is meant to be used after converting TransBuf to Buffer.
@@ -71,5 +71,7 @@ class Pixels(VisualBase):
 
     @staticmethod
     def sanity_check_attributes(positions: TransBuf, colors: TransBuf, groups: Groups):
+
+        # check groups are valid
 
         pass
