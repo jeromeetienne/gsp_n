@@ -19,7 +19,7 @@ def main():
     # Random positions - Create buffer from numpy array
     positions_buffer = Buffer.from_numpy(np.random.rand(point_count, 3).astype(np.float32))
     # all pixels red - Create buffer and fill it with a constant
-    colors_buffer = Buffer(point_count, BufferType.color) # Red color
+    colors_buffer = Buffer(point_count, BufferType.color)  # Red color
     # one group for all points - create buffer and set value with immediate array assignment
     groups_buffer = Buffer.from_numpy(np.array([1]).astype(np.uint32))
     # Create pixels visual
@@ -37,7 +37,6 @@ def main():
     texture_buffer = DataSource("path/to/your/image.png").to_buffer(gsp.BufferType.uint8)
     texture = Texture2D(texture_buffer)
 
-    
     positions_buffer = Buffer.from_numpy(np.array([[100.0, 100.0, 0.0]], dtype=np.float32))
     sizes_buffer = Buffer.from_numpy(np.array([[200.0, 150.0]], dtype=np.float32))
     axis_buffer = Buffer.from_numpy(np.array([[0.0, 0.0, 1.0]], dtype=np.float32))
